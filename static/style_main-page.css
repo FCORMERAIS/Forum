@@ -63,10 +63,21 @@ body{
     left: 40%;
 }
 
-.category {
+.categories {
     position: relative;
     top: 10%;
 }
+
+.search_categorie {
+    position: relative;
+    top: 10%;
+}
+
+.interface_categories {
+    position: relative;
+    top: 10%;
+}
+
 
 .triangle{
     border-left: 210px solid transparent;
