@@ -6,16 +6,44 @@
 .connected {
     margin-right:12%
 }
-.title{
-    margin-top:15%
+
+.formulaire{
+    position: absolute;
+    width: 30%;
+    height: 10%;
+    outline: none;
+    font-size: 15px;
+    padding: 2px 0 2px 4px;
+    border: 5px solid rgba(0, 0, 0, 0.3);
+    color: #000000;
+    border-radius: 50px;
+    margin-left:10%;
+    z-index: 100;
 }
+
+.popup-content{
+    width:30%;
+    height:30%;
+    background-color: rgba(255,255,255,0.7);
+    position:absolute;
+    border-radius: 20px;
+    top:40%;
+    left:40%;
+    z-index:100;
+    font-size: x-large;
+}
+
+
 .header {
     background-color: #606060;
     padding: 3%;
     text-align: right;
     z-index: 0;
-    position: absolute;
     width: 94%;
+}
+
+.title{
+    margin-top:15%;
 }
 
 body{
@@ -27,10 +55,13 @@ body{
 }
 .center {
     position: absolute;
-    margin-top:17%;
     margin-left:45%;
     color:rgba(0,0,0,0.75);
     font-size: xxx-large;
+}
+
+.popup-content{
+    display:flex
 }
 /* .formBody{       
     display: flex;
