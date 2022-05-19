@@ -88,3 +88,13 @@ body{
     left: 89%;
     z-index: 2;
 }
+
+.triangleText{
+    position: absolute;
+    top: 1.8em;
+    font-size: x-large;
+    color: white;
+    text-align: center;
+    padding: 2em;
+    right: 0;
+}

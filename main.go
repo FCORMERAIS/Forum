@@ -19,6 +19,8 @@ func ServeFiles(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(path)
 	if path == "/" {
 		path = "./templates/server.html"
+	} else if path == "/Forum" {
+		path = "./templates/Forum.html"
 	} else {
 		path = "." + path
 	}

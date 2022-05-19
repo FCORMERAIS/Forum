@@ -3,8 +3,8 @@ const url = "127.0.0.1:5555"
 var inputForm = document.getElementById("inputForm")
 var register = document.getElementById("RegisterBtn")
 var connect = document.getElementById("connectBtn")
-const registerPush = false
-const connectedPush = false
+var popupActivate = false
+
 // inputForm.addEventListener("submit", (e)=>{
 //     //prevent auto submission
 //     e.preventDefault()
@@ -22,11 +22,13 @@ const connectedPush = false
 // })
 
 register.addEventListener("click",function() {
-    document.getElementById("popup-content").remove();
+    if (popupActivate) {
+        document.getElementById("popup-content").remove();
+    }
     const popup = document.createElement("div")
     popup.classList.add("popup")
     popup.innerHTML = `
-    <div class="popup-content">
+    <div class="popup-content" id="popup-content">
         <h1 style="margin-top:17%; margin-left:5%;">S'enregistrer : </h1>
         <form id="registerForm">
             </br>
@@ -47,30 +49,32 @@ register.addEventListener("click",function() {
     </div>
     `
     document.body.appendChild(popup)
+    popupActivate = true
 })
 
 connect.addEventListener("click",function() {
-    if (connectedPush == false) {
-        const popup = document.createElement("div")
-        popup.classList.add("popup")
-        popup.innerHTML = `
-            <div class="popup-content">
-            <h1 style="margin-top:10%; margin-left:5%;">Connexion : </h1>
-            <form id="registerForm">
-                </br>
-                <input class ="formulaire" type="email" name="email" placeholder="Email">
-                </br>
-                </br>
-                <input class ="formulaire" type="password" name="password" placeholder="Password">
-                </br>
-                </br>
-                <input style="color:#000000" class ="formulaire" type="submit" value="se connecter">
-                </br>
-                </br>
-            </form>
-        </div>
-        `
-        document.body.appendChild(popup)
+    if (popupActivate) {
+        document.getElementById("popup-content").remove();
     }
-    if (connectedPush ==false){connectedPush=true}
+    const popup = document.createElement("div")
+    popup.classList.add("popup")
+    popup.innerHTML = `
+        <div class="popup-content" id="popup-content">
+        <h1 style="margin-top:10%; margin-left:5%;">Connexion : </h1>
+        <form id="registerForm">
+            </br>
+            <input class ="formulaire" type="email" name="email" placeholder="Email">
+            </br>
+            </br>
+            <input class ="formulaire" type="password" name="password" placeholder="Password">
+            </br>
+            </br>
+            <input style="color:#000000" class ="formulaire" type="submit" value="se connecter">
+            </br>
+            </br>
+        </form>
+    </div>
+    `
+    document.body.appendChild(popup)
+    popupActivate = true
 })
