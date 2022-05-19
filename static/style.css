@@ -10,7 +10,7 @@
 .formulaire{
     position: absolute;
     width: 30%;
-    height: 10%;
+    height: auto;
     outline: none;
     font-size: 15px;
     padding: 2px 0 2px 4px;
@@ -23,7 +23,7 @@
 
 .popup-content{
     width:30%;
-    height:30%;
+    height:auto;
     background-color: rgba(255,255,255,0.7);
     position:absolute;
     border-radius: 20px;

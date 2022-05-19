@@ -22,31 +22,31 @@ const connectedPush = false
 // })
 
 register.addEventListener("click",function() {
-    if (registerPush == false) {
-        const popup = document.createElement("div")
-        popup.classList.add("popup")
-        popup.innerHTML = `
-        <div class="popup-content">
-            <h1 style="margin-top:17%; margin-left:5%;">S'enregistrer : </h1>
-            <form id="registerForm">
-                </br>
-                <input class ="formulaire" type="email" name="username" placeholder="Email">
-                </br>
-                </br>
-                <input class ="formulaire" type="text" name="email" placeholder="Username">
-                </br>
-                </br>
-                <input class ="formulaire" type="password" name="password" placeholder="Password">
-                </br>
-                </br>
-                </br>
-                <input style="color:#000000" class ="formulaire" type="submit" value="Register">
-            </form>
-        </div>
-        `
-        document.body.appendChild(popup)
-    }
-    if (registerPush ==false){registerPush=true}
+    document.getElementById("popup-content").remove();
+    const popup = document.createElement("div")
+    popup.classList.add("popup")
+    popup.innerHTML = `
+    <div class="popup-content">
+        <h1 style="margin-top:17%; margin-left:5%;">S'enregistrer : </h1>
+        <form id="registerForm">
+            </br>
+            <input class ="formulaire" type="email" name="username" placeholder="Email">
+            </br>
+            </br>
+            <input class ="formulaire" type="text" name="email" placeholder="Username">
+            </br>
+            </br>
+            <input class ="formulaire" type="password" name="password" placeholder="Password">
+            </br>
+            </br>
+            </br>
+            <input style="color:#000000" class ="formulaire" type="submit" value="S'enregistrer">
+            </br>
+            </br>
+        </form>
+    </div>
+    `
+    document.body.appendChild(popup)
 })
 
 connect.addEventListener("click",function() {
@@ -65,6 +65,8 @@ connect.addEventListener("click",function() {
                 </br>
                 </br>
                 <input style="color:#000000" class ="formulaire" type="submit" value="se connecter">
+                </br>
+                </br>
             </form>
         </div>
         `
