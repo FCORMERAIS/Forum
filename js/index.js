@@ -1,25 +1,9 @@
 console.log("JS Loaded")
 const url = "127.0.0.1:5555"
-var inputForm = document.getElementById("inputForm")
 var register = document.getElementById("RegisterBtn")
 var connect = document.getElementById("connectBtn")
-var popupActivate = false
 
-// inputForm.addEventListener("submit", (e)=>{
-//     //prevent auto submission
-//     e.preventDefault()
-//     const formdata = new FormData(inputForm)
-//     fetch(url,{
-//         method:"POST",
-//         body:formdata,
-//     }).then(
-//         response => response.text()
-//     ).then(
-//         (data) => {console.log(data);document.getElementById("serverMessageBox").innerHTML=data}
-//     ).catch(
-//         error => console.error(error)
-//     )
-// })
+var popupActivate = false
 
 register.addEventListener("click",function() {
     if (popupActivate) {
@@ -30,7 +14,7 @@ register.addEventListener("click",function() {
     popup.innerHTML = `
     <div class="popup-content" id="popup-content">
         <h1 style="margin-top:17%; margin-left:5%;">S'enregistrer : </h1>
-        <form id="registerForm">
+        <form id="registerForm" method="POST">
             </br>
             <input class ="formulaire" type="email" name="username" placeholder="Email">
             </br>
@@ -52,6 +36,7 @@ register.addEventListener("click",function() {
     popupActivate = true
 })
 
+
 connect.addEventListener("click",function() {
     if (popupActivate) {
         document.getElementById("popup-content").remove();
@@ -61,7 +46,7 @@ connect.addEventListener("click",function() {
     popup.innerHTML = `
         <div class="popup-content" id="popup-content">
         <h1 style="margin-top:10%; margin-left:5%;">Connexion : </h1>
-        <form id="registerForm">
+        <form id="registerForm" method="POST">
             </br>
             <input class ="formulaire" type="email" name="email" placeholder="Email">
             </br>

@@ -19,6 +19,16 @@ func ServeFiles(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(path)
 	if path == "/" {
 		path = "./templates/server.html"
+		// tmpl, err := template.ParseFiles("./templates/Forum.html", "./templates/header.html", "./templates/server.html")
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+		fmt.Println(r.Method)
+		if r.Method == "POST" {
+			fmt.Println(r.FormValue("registerForm"))
+		}
+		// tmpl.ExecuteTemplate(w, "listartists", nil)
+
 	} else if path == "/Forum" {
 		path = "./templates/Forum.html"
 	} else {
