@@ -1,0 +1,78 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+
+.header {
+    background-color: #606060;
+    padding: 3%;
+    text-align: right;
+    z-index: 0;
+    position: absolute;
+    width: 94%;
+}
+
+.connected {
+    margin-right:12%
+}
+
+.barreLeft{
+    z-index: 2;
+    text-align: center;
+    background-color : #DEDEDE;
+    width: 17%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+
+.title{
+    margin-top:15%
+}
+
+.subtitle {
+    text-align: center;
+    font-size: large;
+}
+
+.privateMsg {
+    position: relative;
+    top: 7%;
+}
+
+.interface_privateMsg {
+    position: relative;
+    top: 9%;
+    overflow-y: scroll;
+    scrollbar-width: auto;
+    height: 35%;
+}
+
+.private_Msg {
+    display: flex;
+    padding-bottom: 10%;
+}
+
+.profile {
+    position: relative;
+    left: 25%;
+}
+
+.user {
+    position: relative;
+    left: 40%;
+}
+
+.category {
+    position: relative;
+    top: 10%;
+}
+
+.triangle{
+    border-left: 210px solid transparent;
+    border-bottom: 270px solid #606060;
+    position: absolute;
+    top: 71%;
+    left: 89%;
+    z-index: 2;
+}
