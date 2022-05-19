@@ -1,6 +1,5 @@
 console.log("JS Loaded")
 const url = "127.0.0.1:5555"
-var inputForm = document.getElementById("inputForm")
 var register = document.getElementById("RegisterBtn")
 var connect = document.getElementById("connectBtn")
 var popupActivate = false

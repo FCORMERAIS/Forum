@@ -87,3 +87,21 @@ body{
     left: 89%;
     z-index: 2;
 }
+
+.interface_create_post{
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    bottom: 0%;
+    right: 2em;
+    background-color: #606060;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ 
+.CP_Message{
+    width: 80%;
+    height: 60%;
+}
