@@ -16,6 +16,26 @@ body{
     margin-right:12%
 }
 
+.triangle{
+    border-left: 210px solid transparent;
+    border-bottom: 270px solid #606060;
+    position: absolute;
+    top: 71%;
+    left: 89%;
+    z-index: 2;
+}
+
+.triangleText{
+    position: absolute;
+    top: 2.5em;
+    font-size: x-large;
+    color: white;
+    text-align: center;
+    padding: 2em;
+    right: 0;
+}
+
+
 .barreLeft{
     z-index: 2;
     text-align: center;
