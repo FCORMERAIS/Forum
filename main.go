@@ -6,11 +6,11 @@ import (
 	"net/http"
 )
 
-var Port = ":5555"
+var Port = "127.0.0.1:5555"
 
 func main() {
 	http.HandleFunc("/", ServeFiles)
-	fmt.Println("Serving @ : ", "http://127.0.0.1"+Port)
+	fmt.Println("Serving @ : ", "http://"+Port)
 	log.Fatal(http.ListenAndServe(Port, nil))
 }
 

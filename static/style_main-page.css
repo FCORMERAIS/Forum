@@ -107,3 +107,48 @@ body{
     left: 89%;
     z-index: 2;
 }
+
+.interface_create_post{
+    position: absolute;
+    width: 30%;
+    height: 45%;
+    bottom: 0%;
+    right: 1em;
+    background-color: #606060;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.CP_Information{
+    position: absolute;
+    top: 0px;
+    left: 1em;
+    color: white;
+    font-size: large;
+}
+
+.CP_Message{
+    width: 70%;
+    height: 60%;
+    vertical-align: text-top;
+}
+
+.CP_fermer{
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    width: 20px;
+    background: #ff0000a9;
+    height: 20px;
+    border-radius: 100px;
+}
+
+.ajout_photo{
+    position: absolute;
+    bottom: 0px;
+    left: 10%;
+    font-size: xX-large;
+}
