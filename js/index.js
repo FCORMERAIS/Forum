@@ -16,19 +16,14 @@ register.addEventListener("click",function() {
         <h1 style="margin-top:17%; margin-left:5%;">S'enregistrer : </h1>
         <form id="registerForm" method="POST">
             </br>
-            <input class ="formulaire" type="email" name="username" placeholder="Email">
-            </br>
-            </br>
-            <input class ="formulaire" type="text" name="email" placeholder="Username">
-            </br>
-            </br>
+            <input class ="formulaire" type="email" name="email" placeholder="Email">
+            </br></br>
+            <input class ="formulaire" type="text" name="username" placeholder="Username">
+            </br></br>
             <input class ="formulaire" type="password" name="password" placeholder="Password">
-            </br>
-            </br>
-            </br>
+            </br></br></br>
             <input style="color:#000000" class ="formulaire" type="submit" value="S'enregistrer">
-            </br>
-            </br>
+            </br></br>
         </form>
     </div>
     `
@@ -48,15 +43,12 @@ connect.addEventListener("click",function() {
         <h1 style="margin-top:10%; margin-left:5%;">Connexion : </h1>
         <form id="registerForm" method="POST">
             </br>
-            <input class ="formulaire" type="email" name="email" placeholder="Email">
-            </br>
-            </br>
-            <input class ="formulaire" type="password" name="password" placeholder="Password">
-            </br>
-            </br>
+            <input class ="formulaire" type="email" name="email2" placeholder="Email">
+            </br></br>
+            <input class ="formulaire" type="password" name="password2" placeholder="Password">
+            </br></br>
             <input style="color:#000000" class ="formulaire" type="submit" value="se connecter">
-            </br>
-            </br>
+            </br></br>
         </form>
     </div>
     `
