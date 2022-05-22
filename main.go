@@ -19,6 +19,8 @@ type User struct {
 var Port = ":5555"
 
 func main() {
+	fileserver := http.FileServer(http.Dir("static"))
+	http.Handle("/static", http.StripPrefix("/static", fileserver))
 	http.HandleFunc("/", Acceuil)
 	http.HandleFunc("/Forum", Forum)
 	fmt.Println("Serving @ : ", "http://127.0.0.1"+Port)
@@ -39,15 +41,23 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 			var passwordConnect = r.FormValue("password2")
 			if usernameConnect != "" && passwordConnect != "" {
 				fmt.Println("entrer1")
-				if goodMail(usernameConnect) {
+				passwordAccount := goodMail(usernameConnect)
+				if passwordAccount != "" {
 					fmt.Println("entrer2")
-					data := connected(usernameConnect, passwordConnect)
+					if passwordAccount == passwordConnect {
+						fmt.Println("CEST GOOOOOD")
+						data := connected(usernameConnect)
+						fmt.Println(data)
+					} else {
+						fmt.Println("LE MDP EST PAS BON ")
+					}
 				} else {
-					fmt.Println("erreur le mail n'est pas bon ")
+					fmt.Println("vous n'avez pas rentrer de mot de passe ou le mail n'est pas bon ")
 				}
 			} else {
 				if passwordGood(strings.Split(password, "")) {
 					data := SignUp(email, username, password)
+					fmt.Println(data)
 				}
 			}
 		}
@@ -58,29 +68,35 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 }
 
 func Forum(w http.ResponseWriter, r *http.Request) {
-	filename := "./templates/Forum.html"
+	fmt.Println(r.URL.Path)
 	data := User{
 		email:    "flavio@gmail",
 		username: "Flavio",
 	}
 	fmt.Println(data)
-	t, _ := template.ParseFiles(filename)
-	t.ExecuteTemplate(w, filename, data)
+	t, _ := template.ParseFiles("./templates/Forum.html")
+	t.ExecuteTemplate(w, "./templates/Forum.html", data)
 }
 
-func connected(Useremail string, Userpassword string) User {
+func connected(Useremail string) User {
 	db, err := sql.Open("sqlite3", "./BD/Forum.db")
 	if err != nil {
 		fmt.Println(err)
 	}
-	resulttest, err2 := db.Prepare("SELECT PasswordHash FROM User WHERE Email = ?")
-	testvalue, err3 := resulttest.Query(Useremail)
+	var username string
+	tempo, err2 := db.Prepare("SELECT UserName FROM User WHERE Email = ?")
+	result, err3 := tempo.Query(Useremail)
+
 	if err2 != nil || err3 != nil {
-		fmt.Println(err2, testvalue)
+		fmt.Println(err2)
+	}
+	db.Close()
+	for result.Next() {
+		result.Scan(&username)
 	}
 	return User{
 		email:    Useremail,
-		username: Useremail, // A CHANGER !!!!!!!!!!!
+		username: username, // A CHANGER !!!!!!!!!!!
 	}
 }
 
@@ -108,23 +124,26 @@ func passwordGood(mdp []string) bool {
 	return len(mdp) > 10
 }
 
-func goodMail(mail string) bool {
+func goodMail(mail string) string {
 	db, err := sql.Open("sqlite3", "./BD/Forum.db")
 	if err != nil {
 		db.Close()
-		return false
+		return ""
 	}
-	resulttest, err2 := db.Prepare("SELECT UserName FROM User WHERE Email = ?")
+	resulttest, err2 := db.Prepare("SELECT PasswordHash FROM User WHERE Email = ?")
 	if err2 != nil {
 		db.Close()
-		return false
+		return ""
 	}
+	var password string
 	result, err3 := resulttest.Query(mail)
-	fmt.Println(resulttest, result)
 	db.Close()
+	for result.Next() {
+		result.Scan(&password)
+	}
 	if err3 != nil {
 		db.Close()
-		return false
+		return ""
 	}
-	return false
+	return password
 }
