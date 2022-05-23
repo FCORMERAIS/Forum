@@ -12,8 +12,8 @@ import (
 )
 
 type User struct {
-	email    string
-	username string
+	Email    string
+	Username string
 }
 
 var Port = ":5555"
@@ -42,12 +42,19 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 			if usernameConnect != "" && passwordConnect != "" {
 				fmt.Println("entrer1")
 				passwordAccount := goodMail(usernameConnect)
+				cookie, err := r.Cookie("UserSessionId")
+				if err != nil {
+					cookie = &http.Cookie{
+						Name: "UserSessionId",
+					}
+				}
 				if passwordAccount != "" {
 					fmt.Println("entrer2")
 					if passwordAccount == passwordConnect {
-						fmt.Println("CEST GOOOOOD")
 						data := connected(usernameConnect)
-						fmt.Println(data)
+						cookie.Value = data.Username
+						cookie.MaxAge = 5000
+						http.SetCookie(w, cookie)
 					} else {
 						fmt.Println("LE MDP EST PAS BON ")
 					}
@@ -69,23 +76,36 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 
 func Forum(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.URL.Path)
+	cookie, err := r.Cookie("UserSessionId")
+	if err != nil {
+		fmt.Println(err)
+	}
 	data := User{
-		email:    "flavio@gmail",
-		username: "Flavio",
+		Email:    "flavio@gmail",
+		Username: "Flavio",
+	}
+	if cookie.Value != "" {
+		data.Username = cookie.Value
 	}
 	fmt.Println(data)
-	t, _ := template.ParseFiles("./templates/Forum.html")
-	t.ExecuteTemplate(w, "./templates/Forum.html", data)
+	t, err := template.ParseFiles("./templates/Forum.html")
+	if err != nil {
+		fmt.Printf("error %s \n", err)
+	}
+	err2 := t.Execute(w, data)
+	if err2 != nil {
+		fmt.Printf("error2, %s\n", err2)
+	}
 }
 
-func connected(Useremail string) User {
+func connected(useremail string) User {
 	db, err := sql.Open("sqlite3", "./BD/Forum.db")
 	if err != nil {
 		fmt.Println(err)
 	}
 	var username string
 	tempo, err2 := db.Prepare("SELECT UserName FROM User WHERE Email = ?")
-	result, err3 := tempo.Query(Useremail)
+	result, err3 := tempo.Query(useremail)
 
 	if err2 != nil || err3 != nil {
 		fmt.Println(err2)
@@ -95,8 +115,8 @@ func connected(Useremail string) User {
 		result.Scan(&username)
 	}
 	return User{
-		email:    Useremail,
-		username: username, // A CHANGER !!!!!!!!!!!
+		Email:    useremail,
+		Username: username, // A CHANGER !!!!!!!!!!!
 	}
 }
 
@@ -115,8 +135,8 @@ func SignUp(Useremail string, Userusername string, Userpassword string) User {
 	}
 	db.Close()
 	return User{
-		email:    Useremail,
-		username: Userusername,
+		Email:    Useremail,
+		Username: Userusername,
 	}
 }
 
