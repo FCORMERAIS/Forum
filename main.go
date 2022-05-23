@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
+	"regexp"
 	"text/template"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 type User struct {
-	Email    string
 	Username string
 }
 
@@ -47,13 +46,15 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 					cookie = &http.Cookie{
 						Name: "UserSessionId",
 					}
+				} else {
+					cookie.MaxAge = -1
 				}
 				if passwordAccount != "" {
 					fmt.Println("entrer2")
 					if passwordAccount == passwordConnect {
 						data := connected(usernameConnect)
 						cookie.Value = data.Username
-						cookie.MaxAge = 5000
+						cookie.MaxAge = 300
 						http.SetCookie(w, cookie)
 					} else {
 						fmt.Println("LE MDP EST PAS BON ")
@@ -62,7 +63,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("vous n'avez pas rentrer de mot de passe ou le mail n'est pas bon ")
 				}
 			} else {
-				if passwordGood(strings.Split(password, "")) {
+				if passwordGood(password, w) {
 					data := SignUp(email, username, password)
 					fmt.Println(data)
 				}
@@ -81,14 +82,13 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	data := User{
-		Email:    "flavio@gmail",
-		Username: "Flavio",
+		Username: "PAS CONNECTÉ",
 	}
 	if cookie.Value != "" {
 		data.Username = cookie.Value
 	}
 	fmt.Println(data)
-	t, err := template.ParseFiles("./templates/Forum.html")
+	t, err := template.ParseFiles("./templates/Forum.html", "./templates/header.html")
 	if err != nil {
 		fmt.Printf("error %s \n", err)
 	}
@@ -115,7 +115,6 @@ func connected(useremail string) User {
 		result.Scan(&username)
 	}
 	return User{
-		Email:    useremail,
 		Username: username, // A CHANGER !!!!!!!!!!!
 	}
 }
@@ -135,13 +134,36 @@ func SignUp(Useremail string, Userusername string, Userpassword string) User {
 	}
 	db.Close()
 	return User{
-		Email:    Useremail,
 		Username: Userusername,
 	}
 }
 
-func passwordGood(mdp []string) bool {
-	return len(mdp) > 10
+func passwordGood(mdp string, w http.ResponseWriter) bool {
+	if len(mdp) < 10 {
+		fmt.Fprintf(w, `<p class="error_message">le MDP EST TROP COURT</p>`)
+		return false
+	}
+	r, _ := regexp.Compile("1|2|3|4|5|6|7|8|9")
+	if !r.MatchString(mdp) {
+		fmt.Fprintf(w, `<p class="error_message">IL MANQUE UN CHIFFRE DANS VOTRE MDP</p>`)
+		return false
+	}
+	r2, _ := regexp.Compile("/|\\|#|*|;|!|?|$|}|[")
+	if !r2.MatchString(mdp) {
+		fmt.Fprintf(w, `<p class="error_message">IL MANQUE UN CARACTèRE SPÉCIAL</p>`)
+		return false
+	}
+	r3, _ := regexp.Compile("[A-Z]")
+	if !r3.MatchString(mdp) {
+		fmt.Fprintf(w, `<p class="error_message">il faut une majuscule pour votre mdp</p>`)
+		return false
+	}
+	r4, _ := regexp.Compile("[a-z]")
+	if !r4.MatchString(mdp) {
+		fmt.Fprintf(w, `<p class="error_message">Erreur il faut une minuscule dans votre mdp</p>`)
+		return false
+	}
+	return true
 }
 
 func goodMail(mail string) string {

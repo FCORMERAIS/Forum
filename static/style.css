@@ -126,3 +126,9 @@ body{
     padding: 2em;
     right: 0;
 }
+.error_message {
+    position: absolute;
+    right: 40%;
+    bottom: 40%;
+    z-index: 110;
+}
