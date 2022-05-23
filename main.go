@@ -9,6 +9,8 @@ import (
 	"text/template"
 
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
+	_ "golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -51,21 +53,25 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 				}
 				if passwordAccount != "" {
 					fmt.Println("entrer2")
-					if passwordAccount == passwordConnect {
+					if CheckPasswordHash(passwordConnect, passwordAccount) {
 						data := connected(usernameConnect)
 						cookie.Value = data.Username
 						cookie.MaxAge = 300
 						http.SetCookie(w, cookie)
-					} else {
-						fmt.Println("LE MDP EST PAS BON ")
 					}
 				} else {
 					fmt.Println("vous n'avez pas rentrer de mot de passe ou le mail n'est pas bon ")
 				}
 			} else {
 				if passwordGood(password, w) {
-					data := SignUp(email, username, password)
+					passwordHash, err := HashPassword(password)
+					if err != nil {
+						fmt.Println(err)
+					}
+					data := SignUp(email, username, passwordHash)
 					fmt.Println(data)
+				} else {
+					fmt.Fprintf(w, "DÉSOLÉE UNE ERREUR EST SURVENUE ")
 				}
 			}
 		}
@@ -79,13 +85,14 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.URL.Path)
 	cookie, err := r.Cookie("UserSessionId")
 	if err != nil {
-		fmt.Println(err)
+		cookie = &http.Cookie{
+			Name:  "UserSessionId",
+			Value: "Invité",
+		}
 	}
+	cookie.MaxAge = 300
 	data := User{
-		Username: "PAS CONNECTÉ",
-	}
-	if cookie.Value != "" {
-		data.Username = cookie.Value
+		Username: cookie.Value,
 	}
 	fmt.Println(data)
 	t, err := template.ParseFiles("./templates/Forum.html", "./templates/header.html")
@@ -148,7 +155,7 @@ func passwordGood(mdp string, w http.ResponseWriter) bool {
 		fmt.Fprintf(w, `<p class="error_message">IL MANQUE UN CHIFFRE DANS VOTRE MDP</p>`)
 		return false
 	}
-	r2, _ := regexp.Compile("/|\\|#|*|;|!|?|$|}|[")
+	r2, _ := regexp.Compile("/|#|;|!|$|}")
 	if !r2.MatchString(mdp) {
 		fmt.Fprintf(w, `<p class="error_message">IL MANQUE UN CARACTèRE SPÉCIAL</p>`)
 		return false
@@ -188,4 +195,14 @@ func goodMail(mail string) string {
 		return ""
 	}
 	return password
+}
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
