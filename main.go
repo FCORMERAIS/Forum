@@ -10,7 +10,6 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
-	_ "golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
