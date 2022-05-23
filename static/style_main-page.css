@@ -130,10 +130,25 @@ body{
     font-size: large;
 }
 
-.CP_Message{
-    width: 70%;
+.CP_form{
+    width: 80%;
     height: 60%;
+}
+
+.CP_Message{
+    width: 100%;
+    height: 100%;
     vertical-align: text-top;
+}
+
+.CP_Send{
+    position: absolute;
+    bottom: 0.5em;
+    right: 8%;
+    font-size: -webkit-xxx-large;
+    background-color: transparent;
+    border: transparent;
+    color: white;
 }
 
 .CP_fermer{
@@ -150,5 +165,5 @@ body{
     position: absolute;
     bottom: 0px;
     left: 10%;
-    font-size: xX-large;
+    font-size: xx-large;
 }

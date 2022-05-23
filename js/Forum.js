@@ -6,7 +6,10 @@ document.getElementsByClassName('triangle')[0]
         popup.innerHTML = 
             `
             <p class="CP_Information">Balance ton post :</p>
-            <input class="CP_Message" type="text" placeholder="C'est ici ton blabla ;)">
+            <form class="CP_form" method="POST">
+                <input class="CP_Message" name="SendPost" type="text" placeholder="C'est ici ton blabla ;)">
+                <input class="CP_Send" type="submit" value="&#10145">
+            </form>
             <div class="CP_fermer" id="CP_close")> </div>
             <p class="ajout_photo">&#128193;</p>
             `
@@ -16,4 +19,3 @@ document.getElementsByClassName('triangle')[0]
             document.getElementById("interface_CP").remove();
     })
 });
-
