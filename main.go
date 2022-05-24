@@ -29,7 +29,7 @@ type ArrayPosts struct {
 	arrayPosts []Post
 }
 
-var Port = ":5555"
+var Port = "127.0.0.1:5555"
 
 func main() {
 	fileserver := http.FileServer(http.Dir("static"))
@@ -37,7 +37,7 @@ func main() {
 	http.HandleFunc("/", Acceuil)
 	http.HandleFunc("/Forum", Forum)
 	http.HandleFunc("/donneesJson", GetJson)
-	fmt.Println("Serving @ : ", "http://127.0.0.1"+Port)
+	fmt.Println("Serving @ : ", "http://"+Port)
 	log.Fatal(http.ListenAndServe(Port, nil))
 }
 
