@@ -2,8 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"regexp"
 	"text/template"
@@ -16,6 +18,17 @@ type User struct {
 	Username string
 }
 
+type Post struct {
+	IDUser      int
+	TextPost    string
+	LikePost    bool
+	DislikePost bool
+}
+
+type ArrayPosts struct {
+	arrayPosts []Post
+}
+
 var Port = ":5555"
 
 func main() {
@@ -23,8 +36,14 @@ func main() {
 	http.Handle("/static", http.StripPrefix("/static", fileserver))
 	http.HandleFunc("/", Acceuil)
 	http.HandleFunc("/Forum", Forum)
+	http.HandleFunc("/donneesJson", GetJson)
 	fmt.Println("Serving @ : ", "http://127.0.0.1"+Port)
 	log.Fatal(http.ListenAndServe(Port, nil))
+}
+
+func GetJson(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(GetPostDB())
 }
 
 func Acceuil(w http.ResponseWriter, r *http.Request) {
@@ -197,11 +216,57 @@ func goodMail(mail string) string {
 }
 
 func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 	return string(bytes), err
 }
 
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func SendPostinDB(message string) {
+	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	if err != nil {
+		fmt.Println("Erreur ouverture du fichier :")
+		fmt.Println(err)
+	}
+	statement, err := db.Prepare("INSERT INTO Post (ID_Post, ID_User, ID_Catégorie, Text_Post) VALUES (?,?,?,?)")
+	_, err2 := statement.Exec(rand.Int(), rand.Int(), rand.Int(), message)
+	if err != nil || err2 != nil {
+		fmt.Println("Erreur d'insertion :")
+		fmt.Println(err)
+	}
+	db.Close()
+}
+
+func GetPostDB() []Post {
+	var postList ArrayPosts
+	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	if err != nil {
+		fmt.Println("Erreur ouverture :")
+		fmt.Println(err)
+	}
+	resulttest, err := db.Query("SELECT ID_User, Text_Post, Like, Dislike FROM Post")
+	if err != nil {
+		fmt.Println("Erreur de recherche :")
+		fmt.Println(err)
+	}
+	var ID_User int
+	var Text_Post string
+	var Like bool
+	var Dislike bool
+	var singlePost Post
+	for resulttest.Next() {
+		resulttest.Scan(&ID_User, &Text_Post, &Like, &Dislike)
+		singlePost = Post{
+			IDUser:      ID_User,
+			TextPost:    Text_Post,
+			LikePost:    Like,
+			DislikePost: Dislike,
+		}
+		postList.arrayPosts = append(postList.arrayPosts, singlePost)
+	}
+	resulttest.Close()
+	return postList.arrayPosts
 }
