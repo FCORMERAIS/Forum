@@ -19,3 +19,12 @@ document.getElementsByClassName('triangle')[0]
             document.getElementById("interface_CP").remove();
     })
 });
+
+fetch("http://127.0.0.1:5555/donneesJson")
+.then(response => response.json())
+.then(function (donnee) {
+    for (let index = 0; index < donnee.length; index++) {
+        const element = donnee[index];
+        console.log(element)
+    }
+})
