@@ -121,7 +121,7 @@ func connected(useremail string) User {
 		result.Scan(&username)
 	}
 	return User{
-		Username: username, // A CHANGER !!!!!!!!!!!
+		Username: username,
 	}
 }
 
