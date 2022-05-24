@@ -10,13 +10,13 @@ import (
 	"regexp"
 	"text/template"
 
-	_ "github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
+	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	Username string
+	Id string
 }
 
 type Post struct {
@@ -74,7 +74,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("entrer2")
 					if CheckPasswordHash(passwordConnect, passwordAccount) {
 						data := connected(usernameConnect)
-						cookie.Value = data.Username
+						cookie.Value = data.Id
 						cookie.MaxAge = 300
 						http.SetCookie(w, cookie)
 					}
@@ -111,7 +111,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	}
 	cookie.MaxAge = 300
 	data := User{
-		Username: cookie.Value,
+		Id: cookie.Value,
 	}
 	fmt.Println(data)
 	t, err := template.ParseFiles("./templates/Forum.html", "./templates/header.html")
@@ -121,6 +121,9 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	err2 := t.Execute(w, data)
 	if err2 != nil {
 		fmt.Printf("error2, %s\n", err2)
+	}
+	if r.Method == "POST" {
+		SendPostinDB(r.FormValue("SendPost"))
 	}
 }
 
@@ -141,11 +144,14 @@ func connected(useremail string) User {
 		result.Scan(&username)
 	}
 	return User{
-		Username: username,
+		Id: username,
 	}
 }
 
 func SignUp(Useremail string, Userusername string, Userpassword string) User {
+	var err error
+	Id := uuid.Must(uuid.NewV4(), err)
+	fmt.Println(Id) // ID PERMETTANT DE SAVOIR QUI EST-CE A AJOUTER DANS LA ABSE DE DONNÉES APRES
 	db, err := sql.Open("sqlite3", "./BD/Forum.db")
 	if err != nil {
 		fmt.Println(err)
@@ -160,7 +166,7 @@ func SignUp(Useremail string, Userusername string, Userpassword string) User {
 	}
 	db.Close()
 	return User{
-		Username: Userusername,
+		Id: Userusername,
 	}
 }
 
