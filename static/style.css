@@ -33,8 +33,22 @@
     left:40%;
     z-index:100;
     font-size: x-large;
+    animation-name: slide;
+    animation-duration: 1.5s;
+    overflow: hidden;
 }
 
+@keyframes slide {
+    from {
+        left:100%;
+        overflow: hidden;
+    }
+  
+    to {
+        left:40%;
+        overflow: hidden;
+    }
+  }
 
 .header {
     background-color: #606060;
@@ -111,4 +125,10 @@ body{
     text-align: center;
     padding: 2em;
     right: 0;
+}
+.error_message {
+    position: absolute;
+    right: 40%;
+    bottom: 40%;
+    z-index: 110;
 }

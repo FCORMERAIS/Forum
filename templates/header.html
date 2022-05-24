@@ -1,3 +1,12 @@
-{{define header}}
-
+{{define "header"}}
+<head>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+    <div class="header">
+        {{.Username}}
+        <div class="connected"> 
+            <button class ="button" id="connectBtn">Se connecter</button>
+            <button class ="button" id="RegisterBtn">S'inscrire</button>
+        </div>
+    </div>
 {{end}}
