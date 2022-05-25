@@ -51,10 +51,11 @@
   }
 
 .header {
+    position: fixed;
     background-color: #606060;
     padding: 3%;
     text-align: right;
-    z-index: 0;
+    z-index: 1;
     width: 94%;
 }
 
@@ -104,14 +105,14 @@ body{
     background-color : #DEDEDE;
     width: 17%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
 }
 
 .triangle{
     border-left: 210px solid transparent;
     border-bottom: 270px solid #606060;
-    position: absolute;
+    position: fixed;
     top: 71%;
     left: 89%;
     z-index: 2;
