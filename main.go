@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 	"regexp"
 	"text/template"
@@ -116,6 +115,9 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./templates/Forum.html", "./templates/header.html")
 	if err != nil {
 		fmt.Printf("error %s \n", err)
+	}
+	if r.Method == "POST" {
+		SendPostinDB(r.FormValue("SendPost"))
 	}
 	err2 := t.Execute(w, data)
 	if err2 != nil {
@@ -232,10 +234,11 @@ func SendPostinDB(message string) {
 		fmt.Println(err)
 	}
 	statement, err := db.Prepare("INSERT INTO Post (ID_Post, ID_User, ID_Catégorie, Text_Post) VALUES (?,?,?,?)")
-	_, err2 := statement.Exec(rand.Int(), rand.Int(), rand.Int(), message)
+	_, err2 := statement.Exec(55, 56, 47, message)
 	if err != nil || err2 != nil {
 		fmt.Println("Erreur d'insertion :")
 		fmt.Println(err)
+		fmt.Println(err2)
 	}
 	db.Close()
 }
