@@ -133,7 +133,7 @@ func connected(useremail string) User {
 		fmt.Println(err)
 	}
 	var username string
-	tempo, err2 := db.Prepare("SELECT UserName FROM User WHERE Email = ?")
+	tempo, err2 := db.Prepare("SELECT UserName FROM User WHERE Email = ?") // A CHANGER USERNAME AVEC ID
 	result, err3 := tempo.Query(useremail)
 
 	if err2 != nil || err3 != nil {
@@ -156,7 +156,7 @@ func SignUp(Useremail string, Userusername string, Userpassword string) User {
 	if err != nil {
 		fmt.Println(err)
 	}
-	result, err := db.Prepare("INSERT INTO User (Email, UserName, PasswordHash) VALUES (?, ?, ?)")
+	result, err := db.Prepare("INSERT INTO User (Email, UserName, PasswordHash) VALUES (?, ?, ?)") // A CHANGER
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -276,4 +276,12 @@ func GetPostDB() []Post {
 	}
 	resulttest.Close()
 	return postList.arrayPosts
+}
+
+func trieMostLike(ListPost []Post) []Post {
+	return ListPost
+}
+
+func trieLowLike(ListPost []Post) []Post {
+	return ListPost
 }
