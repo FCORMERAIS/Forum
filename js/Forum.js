@@ -27,7 +27,17 @@ fetch("http://127.0.0.1:5555/donneesJson")
     donnee.forEach(element => {
         const posts = document.getElementById("InterfacePost")
         posts.innerHTML += `
-        <p class="Post">${element.TextPost}</p>
+        <div class="Post">
+            <div class="Interface_User">
+                <img src="https://pic.onlinewebfonts.com/svg/img_329115.png" class="profile_Post" width="35" height="35">
+                <p class="UserName">pseudo</p>
+            </div>
+            <p class="Message">${element.TextPost}</p>
+            <form class="Barre_dinteraction" method="POST">
+                <button class="ButtonLD" name="Like" type="submit" value='Like : ${element.ID_User_Post}'>&#x1F44D;</button>
+                <button class="ButtonLD" name="Dislike" type="submit" value='Dislike : ${element.ID_User_Post}'>&#128078;</button>
+            </form>
+        </div>
         `
         document.body.appendChild(posts)
     });

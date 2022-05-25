@@ -8,7 +8,7 @@ body{
     padding: 3%;
     text-align: right;
     z-index: 0;
-    position: absolute;
+    position: fixed;
     width: 94%;
 }
 
@@ -19,7 +19,7 @@ body{
 .triangle{
     border-left: 210px solid transparent;
     border-bottom: 270px solid #606060;
-    position: absolute;
+    position: fixed;
     top: 71%;
     left: 89%;
     z-index: 2;
@@ -37,12 +37,12 @@ body{
 
 
 .barreLeft{
+    position: fixed;
     z-index: 2;
     text-align: center;
     background-color : #DEDEDE;
     width: 17%;
     height: 100%;
-    position: absolute;
     top: 0;
 }
 
@@ -172,14 +172,52 @@ body{
     position: absolute;
     top: 40%;
     width: 60%;
-    left: 30%;
+    left: 25%;
     border-left: dotted 5px black;
     word-wrap:break-word;
+    overflow-y: hidden;
+    overflow-x: scroll;
 }   
 
 .Post{
     margin: 5%;
-    background-color: #FFFFFF;
+    background-color: #0a79d4;
     border-radius: 5px / 5px;
-    padding: 1px 10px 10px 10px;
+    padding: 1em 1em 1em 1em;
+}
+
+.Interface_User {
+    display: flex;
+    text-align: center;
+}
+
+.profile_Post{
+    position: relative;
+    margin: 1em;
+}
+
+.UserName{
+    position: relative;
+    font-size: large;
+}
+
+.Message{
+    margin: auto;
+    margin-bottom: 1em;
+    background-color: white;
+    border-radius: 5px / 5px;
+    width: 100%;
+    padding: 5px;
+    font-size: large;
+}
+
+.Barre_dinteraction{
+    bottom: 1em;
+    width: 100%;
+}
+
+.ButtonLD {
+    background-color: transparent;
+    border: none;
+    font-size: 150%;
 }

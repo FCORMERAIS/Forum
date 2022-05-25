@@ -233,8 +233,8 @@ func SendPostinDB(message string) {
 		fmt.Println("Erreur ouverture du fichier :")
 		fmt.Println(err)
 	}
-	statement, err := db.Prepare("INSERT INTO Post (ID_Post, ID_User, ID_Catégorie, Text_Post) VALUES (?,?,?,?)")
-	_, err2 := statement.Exec(55, 56, 47, message)
+	statement, err := db.Prepare("INSERT INTO Post (ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post) VALUES (?,?,?,?)")
+	_, err2 := statement.Exec(70, 36, 76, message)
 	if err != nil || err2 != nil {
 		fmt.Println("Erreur d'insertion :")
 		fmt.Println(err)
@@ -250,7 +250,7 @@ func GetPostDB() []Post {
 		fmt.Println("Erreur ouverture :")
 		fmt.Println(err)
 	}
-	resulttest, err := db.Query("SELECT ID_User, Text_Post, Like, Dislike FROM Post")
+	resulttest, err := db.Query("SELECT ID_User_Post, Text_Post, Like, Dislike FROM Post")
 	if err != nil {
 		fmt.Println("Erreur de recherche :")
 		fmt.Println(err)
