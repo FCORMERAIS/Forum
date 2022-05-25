@@ -28,62 +28,66 @@ func GetJson(w http.ResponseWriter, r *http.Request) {
 }
 
 func Acceuil(w http.ResponseWriter, r *http.Request) {
+	var data User
 	path := r.URL.Path
 	fmt.Println(path)
 	fmt.Println(r.Method)
-	if path == "/" {
-		path = "../templates/server.html"
-		if r.Method == "POST" {
-			var username = r.FormValue("username")
-			var password = r.FormValue("password")
-			var email = r.FormValue("email")
-			var EmailConnect = r.FormValue("email2")
-			var passwordConnect = r.FormValue("password2")
-			if EmailConnect != "" && passwordConnect != "" {
-				fmt.Println("entrer1")
-				passwordAccount := goodMail(EmailConnect)
-				cookie, err := r.Cookie("UserSessionId")
-				if err != nil {
-					cookie = &http.Cookie{
-						Name: "UserSessionId",
-					}
-				} else {
-					cookie.MaxAge = -1
-				}
-				if passwordAccount != "" {
-					fmt.Println("entrer2")
-					if CheckPasswordHash(passwordConnect, passwordAccount) {
-						data := connected(EmailConnect)
-						cookie.Value = data.Id
-						cookie.MaxAge = 300
-						http.SetCookie(w, cookie)
-					}
-				} else {
-					fmt.Println("vous n'avez pas rentrer de mot de passe ou le mail n'est pas bon ")
+	if r.Method == "POST" {
+		var username = r.FormValue("username")
+		var password = r.FormValue("password")
+		var email = r.FormValue("email")
+		var EmailConnect = r.FormValue("email2")
+		var passwordConnect = r.FormValue("password2")
+		if EmailConnect != "" && passwordConnect != "" {
+			fmt.Println("entrer1")
+			passwordAccount := goodMail(EmailConnect)
+			cookie, err := r.Cookie("UserSessionId")
+			if err != nil {
+				cookie = &http.Cookie{
+					Name: "UserSessionId",
 				}
 			} else {
-				if passwordGood(password, w) {
-					passwordHash, err := HashPassword(password)
-					if err != nil {
-						fmt.Println(err)
-					}
-					data := SignUp(email, username, passwordHash)
-					fmt.Println(data)
-					cookie := &http.Cookie{
-						Name: "UserSessionId",
-					}
+				cookie.MaxAge = -1
+			}
+			if passwordAccount != "" {
+				fmt.Println("entrer2")
+				if CheckPasswordHash(passwordConnect, passwordAccount) {
+					data := connected(EmailConnect)
 					cookie.Value = data.Id
 					cookie.MaxAge = 300
 					http.SetCookie(w, cookie)
-				} else {
-					fmt.Fprintf(w, "UNE ERREUR EST SURVENUE ")
 				}
+			} else {
+				fmt.Println("vous n'avez pas rentrer de mot de passe ou le mail n'est pas bon ")
+			}
+		} else {
+			if passwordGood(password, w) {
+				passwordHash, err := HashPassword(password)
+				if err != nil {
+					fmt.Println(err)
+				}
+				data := SignUp(email, username, passwordHash)
+				fmt.Println(data)
+				cookie := &http.Cookie{
+					Name: "UserSessionId",
+				}
+				cookie.Value = data.Id
+				cookie.MaxAge = 300
+				http.SetCookie(w, cookie)
+			} else {
+				fmt.Fprintf(w, "UNE ERREUR EST SURVENUE ")
 			}
 		}
-	} else {
-		path = ".." + path
 	}
-	http.ServeFile(w, r, path)
+	t, err := template.ParseFiles("../templates/server.html", "../static/style.")
+	if err != nil {
+		fmt.Println("Il y a un problème :", err)
+	}
+	err2 := t.Execute(w, data)
+	if err2 != nil {
+		fmt.Println("Il y a un problème : ", err2)
+	}
+
 }
 
 func Forum(w http.ResponseWriter, r *http.Request) {
