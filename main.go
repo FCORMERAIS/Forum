@@ -126,7 +126,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 }
 
 func connected(useremail string) User {
-	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	db, err := sql.Open("sqlite3", "./BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -147,7 +147,7 @@ func connected(useremail string) User {
 }
 
 func SignUp(Useremail string, Userusername string, Userpassword string) User {
-	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	db, err := sql.Open("sqlite3", "./BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -194,7 +194,7 @@ func passwordGood(mdp string, w http.ResponseWriter) bool {
 }
 
 func goodMail(mail string) string {
-	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	db, err := sql.Open("sqlite3", "./BD/Forum_DB.db")
 	if err != nil {
 		db.Close()
 		return ""
@@ -228,7 +228,7 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 func SendPostinDB(message string) {
-	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	db, err := sql.Open("sqlite3", "./BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture du fichier :")
 		fmt.Println(err)
@@ -245,7 +245,7 @@ func SendPostinDB(message string) {
 
 func GetPostDB() []Post {
 	var postList ArrayPosts
-	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	db, err := sql.Open("sqlite3", "./BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture :")
 		fmt.Println(err)
