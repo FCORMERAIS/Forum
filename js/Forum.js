@@ -10,7 +10,7 @@ document.getElementsByClassName('triangle')[0]
                 <input class="CP_Message" name="SendPost" type="text" placeholder="C'est ici ton blabla ;)">
                 <input class="CP_Send" type="submit" value="&#10145">
             </form>
-            <div class="CP_fermer" id="CP_close")> </div>
+            <div class="CP_fermer" id="CP_close"> </div>
             <p class="ajout_photo">&#128193;</p>
             `
     document.body.appendChild(popup)
@@ -23,8 +23,12 @@ document.getElementsByClassName('triangle')[0]
 fetch("http://127.0.0.1:5555/donneesJson")
 .then(response => response.json())
 .then(function (donnee) {
-    for (let index = 0; index < donnee.length; index++) {
-        const element = donnee[index];
-        console.log(element)
-    }
+    console.log(donnee)
+    donnee.forEach(element => {
+        const posts = document.getElementById("InterfacePost")
+        posts.innerHTML += `
+        <p class="Post">${element.TextPost}</p>
+        `
+        document.body.appendChild(posts)
+    });
 })

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Forum_DB" id="Project-2376" database="Sqlite" >
+	<schema name="Default" >
+		<table name="Categorie" >
+			<column name="Name" type="TEXT" jt="-1" mandatory="y" />
+			<column name="ID_Categorie" type="TEXT" jt="-1" mandatory="y" />
+			<index name="pk_Categorie" unique="PRIMARY_KEY" >
+				<column name="ID_Categorie" />
+			</index>
+			<fk name="fk_Categorie" to_schema="Default" to_table="Post" delete_action="cascade" update_action="cascade" >
+				<fk_column name="ID_Categorie" pk="ID_Catégorie_Post" />
+			</fk>
+		</table>
+		<table name="Commentaire" >
+			<column name="ID_Commentaire" type="TEXT" jt="-1" mandatory="y" />
+			<column name="Text_Commentaire" type="TEXT" jt="-1" mandatory="y" />
+			<column name="Post_ID" type="TEXT" jt="-1" mandatory="y" />
+			<index name="pk_Commentaire" unique="PRIMARY_KEY" >
+				<column name="ID_Commentaire" />
+			</index>
+			<index name="idx_Commentaire" unique="UNIQUE_KEY" >
+				<column name="Post_ID" />
+			</index>
+		</table>
+		<table name="Post" >
+			<column name="ID_Post" type="TEXT" jt="-1" mandatory="y" />
+			<column name="ID_User_Post" type="TEXT" jt="-1" mandatory="y" />
+			<column name="ID_Catégorie_Post" type="TEXT" jt="-1" />
+			<column name="Text_Post" type="TEXT" jt="-1" />
+			<column name="Picture" type="TEXT" jt="-1" />
+			<column name="Like" type="TEXT" jt="-1" />
+			<column name="Dislike" type="TEXT" jt="-1" />
+			<index name="pk_Post" unique="PRIMARY_KEY" >
+				<column name="ID_Post" />
+			</index>
+			<index name="idx_Post" unique="UNIQUE_KEY" >
+				<column name="ID_Catégorie_Post" />
+			</index>
+			<index name="idx_Post_0" unique="UNIQUE_KEY" >
+				<column name="ID_User_Post" />
+			</index>
+			<fk name="fk_Post" to_schema="Default" to_table="Commentaire" delete_action="cascade" update_action="cascade" >
+				<fk_column name="ID_Post" pk="Post_ID" />
+			</fk>
+		</table>
+		<table name="User" >
+			<column name="ID_User" type="TEXT" jt="-1" mandatory="y" />
+			<column name="Email" type="TEXT" jt="-1" mandatory="y" />
+			<column name="UserName" type="TEXT" jt="-1" mandatory="y" />
+			<column name="PasswordHash" type="TEXT" jt="-1" mandatory="y" />
+			<index name="pk_User" unique="PRIMARY_KEY" >
+				<column name="ID_User" />
+			</index>
+			<fk name="fk_User" to_schema="Default" to_table="Post" delete_action="cascade" update_action="cascade" >
+				<fk_column name="ID_User" pk="ID_User_Post" />
+			</fk>
+		</table>
+	</schema>
+	<connector name="Forum_DB" database="Sqlite" driver_class="org.sqlite.JDBC" driver_jar="sqlite-jdbc-3.36.0.3.jar" driver_desc="Standard" host="localhost" port="7210" instance="C:/Users/natha/Documents/Cours Ynov/Forum/Forum/Forum_DB" />
+	<layout name="Main Layout" id="Layout-15fd" show_relation="columns" >
+		<entity schema="Default" name="Categorie" color="CDC1EE" x="48" y="352" />
+		<entity schema="Default" name="Commentaire" color="C1EED1" x="560" y="352" />
+		<entity schema="Default" name="Post" color="EEC1C1" x="304" y="368" />
+		<entity schema="Default" name="User" color="C1D9EE" x="304" y="144" />
+		<callout x="64" y="48" pointer="Round" >
+			<comment><![CDATA[This is a layout - a diagram with tools. 
+Add tables to the layout by drag & drop from the project structure tree.
+For a better understanding of the schema, create multiple layouts with the same or different tables.
+Drop this callout from its context menu.]]></comment>
+		</callout>
+	</layout>
+</project>

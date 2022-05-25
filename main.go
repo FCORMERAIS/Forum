@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 	"regexp"
 	"text/template"
@@ -30,7 +29,7 @@ type ArrayPosts struct {
 	arrayPosts []Post
 }
 
-var Port = ":5555"
+var Port = "127.0.0.1:5555"
 
 func main() {
 	fileserver := http.FileServer(http.Dir("static"))
@@ -38,7 +37,7 @@ func main() {
 	http.HandleFunc("/", Acceuil)
 	http.HandleFunc("/Forum", Forum)
 	http.HandleFunc("/donneesJson", GetJson)
-	fmt.Println("Serving @ : ", "http://127.0.0.1"+Port)
+	fmt.Println("Serving @ : ", "http://"+Port)
 	log.Fatal(http.ListenAndServe(Port, nil))
 }
 
@@ -118,6 +117,9 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("error %s \n", err)
 	}
+	if r.Method == "POST" {
+		SendPostinDB(r.FormValue("SendPost"))
+	}
 	err2 := t.Execute(w, data)
 	if err2 != nil {
 		fmt.Printf("error2, %s\n", err2)
@@ -128,7 +130,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 }
 
 func connected(useremail string) User {
-	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	db, err := sql.Open("sqlite3", "./BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -199,7 +201,7 @@ func passwordGood(mdp string, w http.ResponseWriter) bool {
 }
 
 func goodMail(mail string) string {
-	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	db, err := sql.Open("sqlite3", "./BD/Forum_DB.db")
 	if err != nil {
 		db.Close()
 		return ""
@@ -233,23 +235,24 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 func SendPostinDB(message string) {
-	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	db, err := sql.Open("sqlite3", "./BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture du fichier :")
 		fmt.Println(err)
 	}
 	statement, err := db.Prepare("INSERT INTO Post (ID_Post, ID_User, ID_Catégorie, Text_Post) VALUES (?,?,?,?)")
-	_, err2 := statement.Exec(rand.Int(), rand.Int(), rand.Int(), message)
+	_, err2 := statement.Exec(55, 56, 47, message)
 	if err != nil || err2 != nil {
 		fmt.Println("Erreur d'insertion :")
 		fmt.Println(err)
+		fmt.Println(err2)
 	}
 	db.Close()
 }
 
 func GetPostDB() []Post {
 	var postList ArrayPosts
-	db, err := sql.Open("sqlite3", "./BD/Forum.db")
+	db, err := sql.Open("sqlite3", "./BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture :")
 		fmt.Println(err)
