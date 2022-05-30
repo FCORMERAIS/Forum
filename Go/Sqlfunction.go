@@ -106,8 +106,8 @@ func GetPostDB() []Post {
 	}
 	var ID_User int
 	var Text_Post string
-	var Like bool
-	var Dislike bool
+	var Like string
+	var Dislike string
 	var singlePost Post
 	for resulttest.Next() {
 		resulttest.Scan(&ID_User, &Text_Post, &Like, &Dislike)
@@ -144,4 +144,30 @@ func connected(useremail string) User {
 		Id:       ID,
 		Username: username,
 	}
+}
+
+func PostWithCategories(categorie string) []Post {
+	var Posts []Post
+	return Posts
+}
+
+func GetAllCategories() []Categorie {
+	var categories []Categorie
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
+	tableCategorie, err2 := db.Query("SELECT Name FROM Categorie")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	var url string
+	var name string
+	for tableCategorie.Next() {
+		tableCategorie.Scan(&name)
+		url = "/Forum#" + name
+		categories = append(categories, Categorie{URL: url, Name: name})
+	}
+	return categories
 }

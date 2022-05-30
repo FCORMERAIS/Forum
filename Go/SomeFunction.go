@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -44,6 +45,21 @@ func HashPassword(password string) (string, error) {
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func KnowLike(listeLike string) int {
+	var Liker = strings.Split(listeLike, "#[}#")
+	return len(Liker)
+}
+
+func Like(listeLike string, username string) bool {
+	var Liker = strings.Split(listeLike, "#[}#")
+	for _, b := range Liker {
+		if b == username {
+			return true
+		}
+	}
+	return false
 }
 
 func trieMostLike(ListPost []Post) []Post {

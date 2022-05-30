@@ -8,8 +8,8 @@ type User struct {
 type Post struct {
 	IDUser      int
 	TextPost    string
-	LikePost    bool
-	DislikePost bool
+	LikePost    string
+	DislikePost string
 }
 
 type ArrayPosts struct {
