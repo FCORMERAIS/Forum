@@ -15,3 +15,13 @@ type Post struct {
 type ArrayPosts struct {
 	arrayPosts []Post
 }
+
+type Categorie struct {
+	URL  string
+	Name string
+}
+
+type ForumPage struct {
+	User           User
+	ListCategories []Categorie
+}

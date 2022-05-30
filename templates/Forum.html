@@ -8,7 +8,13 @@
     <title>Forum</title>
 </head>
 <body>
-    {{ template "header" . }}
+    <div class="header" id="header">
+        <h1 style="margin-right: 40%;">{{.User.Username}}</h1>
+        <form action="/">
+            <input class ="button" type="submit" value="retourner a la page de connexion" />
+        </form>
+        </div>
+    </div>
     <div class="barreLeft">
         <h1 class="title">FORUM FAT</h1>
         <h2 class="subtitle privateMsg">Message privé :</h2>
@@ -45,10 +51,11 @@
         <h2 class="subtitle categories">Catégories :</h2>
         <input class="search_categorie" type="text" placeholder="Rechercher"> 
         <div class="interface_categories">
-            <label>
-                <input type="checkbox">
-                <p>test</p>
-            </label>
+            {{ range .ListCategories }}
+            <form action={{.URL}}>
+                <input type="submit" value={{.Name}} />
+            </form>
+            {{end}}
         </div>
     </div>
     <div class="triangle">

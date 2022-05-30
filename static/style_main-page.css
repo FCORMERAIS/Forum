@@ -198,7 +198,17 @@ body{
         overflow: hidden;
     }
   }
+.button{
+    border: 3px solid gray;
+    padding:1em;
+    margin-left:2%;
+    transition:0.3s;
+}
 
+.button:hover{
+    background-color: #606060;
+    color: white;
+}
 .header {
     position: fixed;
     background-color: #606060;

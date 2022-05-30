@@ -26,6 +26,7 @@ func GetJson(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(GetPostDB())
 }
+
 func Acceuil(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	fmt.Println(path)
@@ -103,6 +104,8 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 }
 
 func Forum(w http.ResponseWriter, r *http.Request) {
+	var Categories []Categorie
+	var Page ForumPage
 	fmt.Println(r.URL.Path)
 	cookie, err := r.Cookie("UserSessionId")
 	if err != nil {
@@ -124,11 +127,14 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		SendPostinDB(r.FormValue("SendPost"))
 	}
-	t, err := template.ParseFiles("../templates/Forum.html", "../templates/header.html")
+	t, err := template.ParseFiles("../templates/Forum.html")
 	if err != nil {
 		fmt.Println(err)
 	}
-	err2 := t.Execute(w, data)
+	Categories = append(Categories, Categorie{URL: "/Forum#Mignon", Name: "Mignon"}, Categorie{URL: "/Forum#Drole", Name: "Drole"}, Categorie{URL: "/Forum#Animaux", Name: "Animaux"}, Categorie{URL: "/Forum#Debat", Name: "Debat"}, Categorie{URL: "/Forum#Foot", Name: "Foot"})
+	Page.User = data
+	Page.ListCategories = Categories
+	err2 := t.Execute(w, Page)
 	if err2 != nil {
 		fmt.Println(err2)
 	}
