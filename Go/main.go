@@ -29,46 +29,39 @@ func GetJson(w http.ResponseWriter, r *http.Request) {
 func Acceuil(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	fmt.Println(path)
-	var data User
+	var data = User{
+		Username: "Invité",
+	}
 	fmt.Println(r.Method)
 	if path == "/" {
-		path = "../templates/server.html"
-		if r.Method == "POST" {
-			var username = r.FormValue("username")
-			var password = r.FormValue("password")
-			var email = r.FormValue("email")
+		if r.Method == "POST" { // Lorsque que l'on rentre dans le POST cc'est que l'utilisateur veut se connecter ou s'enregistrer
+			var usernameRegister = r.FormValue("username")
+			var passwordRegister = r.FormValue("password")
+			var emailRegister = r.FormValue("email")
 			var EmailConnect = r.FormValue("email2")
 			var passwordConnect = r.FormValue("password2")
-			if EmailConnect != "" && passwordConnect != "" {
-				fmt.Println("entrer1")
+			if EmailConnect != "" && passwordConnect != "" { // l'utilisateur essaye de se connecter
 				passwordAccount := goodMail(EmailConnect)
-				cookie, err := r.Cookie("UserSessionId")
-				if err != nil {
-					cookie = &http.Cookie{
-						Name: "UserSessionId",
-					}
-				} else {
-					cookie.MaxAge = -1
-					data.Username = "Invité"
-				}
 				if passwordAccount != "" {
-					fmt.Println("entrer2")
 					if CheckPasswordHash(passwordConnect, passwordAccount) {
-						data := connected(EmailConnect)
+						cookie := &http.Cookie{
+							Name: "UserSessionId",
+						}
+						data = connected(EmailConnect)
 						cookie.Value = data.Id
 						cookie.MaxAge = 300
 						http.SetCookie(w, cookie)
 					}
 				} else {
-					fmt.Println("vous n'avez pas rentrer de mot de passe ou le mail n'est pas bon ")
+					fmt.Println("Le mot de passe n'est pas bon ")
 				}
-			} else {
-				if passwordGood(password, w) {
-					passwordHash, err := HashPassword(password)
+			} else if passwordRegister != "" && usernameRegister != "" && emailRegister != "" { // l'utilisateur essaye de s'enregistrer
+				if passwordGood(passwordRegister, w) {
+					passwordHash, err := HashPassword(passwordRegister)
 					if err != nil {
 						fmt.Println(err)
 					}
-					data := SignUp(email, username, passwordHash)
+					data = SignUp(emailRegister, usernameRegister, passwordHash)
 					cookie := &http.Cookie{
 						Name: "UserSessionId",
 					}
@@ -79,23 +72,23 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 					data.Username = "Invité"
 					fmt.Fprintf(w, "UNE ERREUR EST SURVENUE ")
 				}
+			} else if usernameRegister == "" || passwordConnect == "" || emailRegister == "" || passwordRegister == "" || EmailConnect == "" { // l'utilisateur essaye de se déconnecté
+				data.Username = "Invité"
+			} else { // sinon il y a un roblème on affiche la page ERROR 404
+				t, err := template.ParseFiles("../templates/error404.html")
+				if err != nil {
+					fmt.Println(err)
+				}
+				err2 := t.Execute(w, data)
+				if err2 != nil {
+					fmt.Println(err2)
+				}
 			}
 		}
 	} else {
 		path = ".." + path
-		cookie, err := r.Cookie("UserSessionId")
-		if err != nil {
-			cookie = &http.Cookie{
-				Name: "UserSessionId",
-			}
-			data.Username = "Invité"
-		} else {
-			data.Username = GetUsernameByID(cookie.Value)
-		}
 	}
-	if path == "../static/style.css" || path == "../images/Background.png" || path == "../js/index.js" {
-		http.ServeFile(w, r, path)
-	} else {
+	if r.URL.Path == "/" {
 		t, err := template.ParseFiles("../templates/server.html")
 		if err != nil {
 			fmt.Println(err)
@@ -104,6 +97,8 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 		if err2 != nil {
 			fmt.Println(err2)
 		}
+	} else {
+		http.ServeFile(w, r, path)
 	}
 }
 
@@ -126,15 +121,15 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	} else {
 		data.Username = "Invité"
 	}
-	t, err := template.ParseFiles("../templates/Forum.html")
-	if err != nil {
-		fmt.Printf("error %s \n", err)
-	}
 	if r.Method == "POST" {
 		SendPostinDB(r.FormValue("SendPost"))
 	}
+	t, err := template.ParseFiles("../templates/Forum.html", "../templates/header.html")
+	if err != nil {
+		fmt.Println(err)
+	}
 	err2 := t.Execute(w, data)
 	if err2 != nil {
-		fmt.Printf("error2, %s\n", err2)
+		fmt.Println(err2)
 	}
 }
