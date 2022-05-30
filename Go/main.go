@@ -89,7 +89,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 		path = ".." + path
 	}
 	if r.URL.Path == "/" {
-		t, err := template.ParseFiles("../templates/server.html")
+		t, err := template.ParseFiles("../templates/server.html", "../templates/header.html")
 		if err != nil {
 			fmt.Println(err)
 		}
