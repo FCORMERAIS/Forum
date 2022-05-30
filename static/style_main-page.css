@@ -171,6 +171,13 @@ body{
     z-index: 100;
 }
 
+.categorie{
+    border: 3px solid gray;
+    padding:0.5em;
+    margin-left:2%;
+    transition:0.3s;
+}
+
 .popup-content{
     width:30%;
     height:auto;

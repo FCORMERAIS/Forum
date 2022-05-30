@@ -53,7 +53,7 @@
         <div class="interface_categories">
             {{ range .ListCategories }}
             <form action={{.URL}}>
-                <input type="submit" value={{.Name}} />
+                <input class="categorie" type="submit" value={{.Name}} />
             </form>
             {{end}}
         </div>
