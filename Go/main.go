@@ -104,7 +104,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 }
 
 func Forum(w http.ResponseWriter, r *http.Request) {
-	var Categories []Categorie
+	var Categories = GetAllCategories()
 	var Page ForumPage
 	fmt.Println(r.URL.Path)
 	cookie, err := r.Cookie("UserSessionId")
@@ -131,7 +131,6 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	Categories = append(Categories, Categorie{URL: "/Forum#Mignon", Name: "Mignon"}, Categorie{URL: "/Forum#Drole", Name: "Drole"}, Categorie{URL: "/Forum#Animaux", Name: "Animaux"}, Categorie{URL: "/Forum#Debat", Name: "Debat"}, Categorie{URL: "/Forum#Foot", Name: "Foot"})
 	Page.User = data
 	Page.ListCategories = Categories
 	err2 := t.Execute(w, Page)
