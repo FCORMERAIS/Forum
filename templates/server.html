@@ -9,12 +9,7 @@
 </head>
 
 <body>
-    <div class="header">
-        <div class="connected"> 
-            <button class ="button" id="connectBtn">Se connecter</button>
-            <button class ="button" id="RegisterBtn">S'inscrire</button>
-        </div>
-    </div>
+    {{ template "header" . }}
     <div class="barreLeft">
         <h1 class="title">PATOU POST</h1>
     </div>
@@ -23,15 +18,8 @@
             -------></a>
     </div>
     <h1 class="center">WELCOME TO FORUM !</h1>
-    <!--<div class ="formBody" id="formBody">
-    <form method="POST" id="inputForm">
-        <label for="message">Message</label>
-        <input id="message" name="message" value="hello!!" type="text">
-        <button type="submit" style="width:100px;">Go</button>
-        </form>      
-    </div>-->
     <div class="testText" id="serverMessageBox">
     </div>
-    <script src="../js/index.js"></script>
+    <script type="module" src="../js/index.js"></script>
 </body>
 </html>
