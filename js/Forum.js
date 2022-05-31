@@ -1,50 +1,48 @@
-document.getElementsByClassName('triangle')[0]
-        .addEventListener('click', function () {
-            console.log(document.cookie)
-            const popup = document.createElement("div")
-            popup.setAttribute("id","interface_CP");
-            popup.classList.add("interface_create_post")
-        popup.innerHTML = 
-            `
-            <p class="CP_Information">Balance ton post :</p>
-            <form class="CP_form" method="POST" id="form">
-                <input class="CP_Message" name="SendPost" id="Message type="text" placeholder="C'est ici ton blabla ;)">
-                <input class="CP_Send" type="submit" value="&#10145" id="nextPost">
-            </form>
-            <div class="CP_fermer" id="CP_close"> </div>
-            <p class="ajout_photo">&#128193;</p>
-            `
-            document.body.appendChild(popup)
-            const popupNext = document.createElement("div")
-            popupNext.setAttribute("id","interface_CP_next");
-            popupNext.classList.add('interface_create_post_Next')
-            popupNext.innerHTML =
-             `
-            <div class="CP_fermer" id="CP_close_test"> </div>
-            <form class="CP_form" method="POST" id="form_next">
-            <input class="CP_Message" type="hidden" id="MessageValue">
-            <input type="text">1
-            <input class="CP_Send" type="submit" value="&#10145" id="nextPost_test">
-            </form>
-            `
-            document.body.appendChild(popupNext)
-        document.getElementById('CP_close')
-            .addEventListener('click', () => {
-                document.getElementById("interface_CP").remove();
-            })
-        let Message = document.getElementById("Message").value
-        const form  = document.getElementById('form');
-        form.addEventListener('submit', (event) => {
-                document.getElementsByClassName("interface_create_post_Next")[0].style.zIndex = "7";
-                event.preventDefault();
-        });
-        const nextForm = document.getElementById('form_next');
-        nextForm.addEventListener('submit', () => {
-            document.getElementById("MessageValue").value = Message 
-        });
+document.getElementsByClassName('triangle')[0].addEventListener('click', function () {
+    let Message = ""
+    const popup = document.createElement("div")
+    popup.setAttribute("id","interface_CP");
+    popup.classList.add("interface_create_post")
+    popup.innerHTML = 
+    `
+    <p class="CP_Information">Balance ton post :</p>
+        <input class="CP_Message" name="SendPost" id="Message" type="text" placeholder="C'est ici ton blabla ;)">
+        <input class="CP_Send" type="submit" value="&#10145" id="nextPost">
+    <div class="CP_fermer" id="CP_close"> </div>
+    <p class="ajout_photo">&#128193;</p>
+    `
+    
+    const popupNext = document.createElement("div")
+    popupNext.setAttribute("id","interface_CP_next");
+    popupNext.classList.add('interface_create_post_Next')
+    popupNext.innerHTML =
+    `
+    <div class="CP_fermer" id="CP_close_test"> </div>
+    <form class="CP_form" method="POST" id="form_next" name="test">
+        <input class="CP_Message" type="hidden" id="MessageValue" name="Message_Value">
+        <p class="CP_Message_next" id="Value_Message">${Message}</p>
+        <select name="Categorie" id="city-select">
+            <option value=Technologie>Technologie</option>
+            <option value=Debat>Debat</option>
+        </select>
+        <input class="CP_Send" type="submit" value="&#10145" id="publishPost">
+    </form>
+    `
+    document.body.appendChild(popupNext)
+    document.body.appendChild(popup)
+    document.getElementById('CP_close').addEventListener('click', () => {
+            document.getElementById("interface_CP").remove();
+    })
+    document.getElementById('nextPost').addEventListener('click', () => {
+        Message = document.getElementById("Message").value
+        document.getElementById("MessageValue").value = Message
+        console.log("Value" + Message)
+        document.getElementsByClassName("interface_create_post_Next")[0].style.zIndex = "7";
     });
-
-
+    document.getElementById('form_next').addEventListener('submit', () => {
+        console.log(document.getElementById("MessageValue").value)
+    });
+});
 
 
 fetch("http://127.0.0.1:5555/donneesJson")
