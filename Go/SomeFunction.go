@@ -48,14 +48,14 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 func KnowLike(listeLike string) int {
-	var Liker = strings.Split(listeLike, "#[}#")
+	var Liker = strings.Split(listeLike, " ")
 	return len(Liker)
 }
 
-func Like(listeLike string, username string) bool {
-	var Liker = strings.Split(listeLike, "#[}#")
+func Like(listeLike string, uuid string) bool {
+	var Liker = strings.Split(listeLike, " ")
 	for _, b := range Liker {
-		if b == username {
+		if b == uuid {
 			return true
 		}
 	}

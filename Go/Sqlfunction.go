@@ -171,3 +171,40 @@ func GetAllCategories() []Categorie {
 	}
 	return categories
 }
+
+func addUserLike(uuid string, post_ID string) {
+	var resultPost string
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement, err2 := db.Prepare("SELECT Like FROM Post WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	result, err3 := statement.Query(post_ID)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	for result.Next() {
+		result.Scan(&resultPost)
+	}
+	db.Close()
+	resultPost += " " + uuid
+	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement2, err2 := db2.Prepare("UPDATE Post SET Like = ? WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	tempo, err3 := statement2.Query(resultPost, uuid)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	if tempo == nil {
+		fmt.Println("tempo is empty")
+	}
+	db.Close()
+}
