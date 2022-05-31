@@ -10,10 +10,7 @@ type Post struct {
 	TextPost    string
 	LikePost    int
 	DislikePost int
-}
-
-type ArrayPosts struct {
-	arrayPosts []Post
+	idPost      string
 }
 
 type Categorie struct {

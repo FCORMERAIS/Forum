@@ -93,26 +93,27 @@ func SendPostinDB(message string, Id_User string) {
 }
 
 func GetPostDB() []Post {
-	var postList ArrayPosts
+	var postList []Post
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture :")
 		fmt.Println(err)
 	}
-	resulttest, err := db.Query("SELECT ID_User_Post, Text_Post, Like, Dislike FROM Post")
+	resulttest, err := db.Query("SELECT ID_Post, ID_User_Post, Text_Post, Like, Dislike FROM Post")
 	if err != nil {
 		fmt.Println("Erreur de recherche :")
 		fmt.Println(err)
 	}
 	var Username string
 	var Text_Post string
+	var id_post string
 	var Like string
 	var Dislike string
 	var numberLike int
 	var numberDislike int
 	var singlePost Post
 	for resulttest.Next() {
-		resulttest.Scan(&Username, &Text_Post, &Like, &Dislike)
+		resulttest.Scan(&id_post, &Username, &Text_Post, &Like, &Dislike)
 		Username = GetUsernameByID(Username)
 		numberLike = KnowLike(Like)
 		numberDislike = KnowLike(Dislike)
@@ -121,11 +122,12 @@ func GetPostDB() []Post {
 			TextPost:    Text_Post,
 			LikePost:    numberLike,
 			DislikePost: numberDislike,
+			idPost:      id_post,
 		}
-		postList.arrayPosts = append(postList.arrayPosts, singlePost)
+		postList = append(postList, singlePost)
 	}
 	resulttest.Close()
-	return postList.arrayPosts
+	return postList
 }
 
 func connected(useremail string) User {

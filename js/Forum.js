@@ -63,8 +63,8 @@ fetch("http://127.0.0.1:5555/donneesJson")
             </div>
             <p class="Message">${element.TextPost}</p>
             <form class="Barre_dinteraction" method="POST">
-                <button class="ButtonLD" name="Like" type="submit" value='Like : '>&#x1F44D; ${element.LikePost}</button>
-                <button class="ButtonLD" name="Dislike" type="submit" value='Dislike : '>&#128078;${element.DislikePost}</button>
+                <button class="ButtonLD" name="Like" type="submit" value=${element.idPost}>&#x1F44D; ${element.LikePost}</button>
+                <button class="ButtonLD" name="Dislike" type="submit" value=${element.idPost}>&#128078;${element.DislikePost}</button>
             </form>
         </div>
         `
