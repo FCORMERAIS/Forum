@@ -6,30 +6,43 @@ document.getElementsByClassName('triangle')[0]
         popup.innerHTML = 
             `
             <p class="CP_Information">Balance ton post :</p>
-            <form class="CP_form" method="POST">
-                <input class="CP_Message" name="SendPost" type="text" placeholder="C'est ici ton blabla ;)">
-                <input class="CP_Send" type="submit" value="&#10145 id="nextPost">
+            <form class="CP_form" method="POST" id="form">
+                <input class="CP_Message" name="SendPost" id="Message type="text" placeholder="C'est ici ton blabla ;)">
+                <input class="CP_Send" type="submit" value="&#10145" id="nextPost">
             </form>
             <div class="CP_fermer" id="CP_close"> </div>
             <p class="ajout_photo">&#128193;</p>
             `
-    document.body.appendChild(popup)
-    document.getElementById('CP_close')
-        .addEventListener('click', () => {
-            document.getElementById("interface_CP").remove();
-    })
-    document.getElementById('nextPost')
-        .addEventListener('click', () => {
+            document.body.appendChild(popup)
             const popupNext = document.createElement("div")
-            popupNext.setAttribute("id","interface_CP");
-            popupNext.classList.add('interface_create_post')
+            popupNext.setAttribute("id","interface_CP_next");
+            popupNext.classList.add('interface_create_post_Next')
             popupNext.innerHTML =
+             `
+            <div class="CP_fermer" id="CP_close_test"> </div>
+            <form class="CP_form" method="POST" id="form_next">
+            <input class="CP_Message" type="hidden" id="MessageValue">
+            <input type="text">
+            <input class="CP_Send" type="submit" value="&#10145" id="nextPost_test">
+            </form>
             `
-            <div class="CP_fermer" id="CP_close"> </div>
+            document.body.appendChild(popupNext)
+        document.getElementById('CP_close')
+            .addEventListener('click', () => {
+                document.getElementById("interface_CP").remove();
+            })
+        let Message = document.getElementById("Message").value
+        const form  = document.getElementById('form');
+        form.addEventListener('submit', (event) => {
+                document.getElementsByClassName("interface_create_post_Next")[0].style.zIndex = "7";
+                event.preventDefault();
+        });
+        const nextForm = document.getElementById('form_next');
+        nextForm.addEventListener('submit', () => {
+            document.getElementById("MessageValue").value = Message 
+        });
+    });
 
-            `
-        })
-});
 
 
 
