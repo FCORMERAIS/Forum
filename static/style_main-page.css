@@ -133,9 +133,16 @@ body{
 .CP_form{
     width: 80%;
     height: 60%;
+    background-color: white;
 }
 
 .CP_Message{
+    width: 80%;
+    height: 60%;
+    vertical-align: text-top;
+}
+
+.CP_Message_next{
     width: 100%;
     height: 100%;
     vertical-align: text-top;
