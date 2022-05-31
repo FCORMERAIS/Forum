@@ -6,10 +6,10 @@ type User struct {
 }
 
 type Post struct {
-	IDUser      int
+	IDUser      string
 	TextPost    string
-	LikePost    bool
-	DislikePost bool
+	LikePost    string
+	DislikePost string
 }
 
 type ArrayPosts struct {

@@ -112,7 +112,4 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	if err2 != nil {
 		fmt.Printf("error2, %s\n", err2)
 	}
-	if r.Method == "POST" {
-		SendPostinDB(r.FormValue("SendPost"))
-	}
 }
