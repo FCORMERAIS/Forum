@@ -102,14 +102,14 @@ body{
 .triangle{
     border-left: 210px solid transparent;
     border-bottom: 270px solid #606060;
-    position: absolute;
+    position: fixed;
     top: 71%;
     left: 89%;
     z-index: 2;
 }
 
 .interface_create_post{
-    position: absolute;
+    position: fixed;
     width: 30%;
     height: 45%;
     bottom: 0%;
@@ -255,7 +255,7 @@ body{
 }
 
 .interface_create_post_Next{
-    position: absolute;
+    position: fixed;
     width: 30%;
     height: 45%;
     bottom: 0%;

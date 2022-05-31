@@ -17,7 +17,7 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', functio
     popupNext.classList.add('interface_create_post_Next')
     popupNext.innerHTML =
     `
-    <div class="CP_fermer" id="CP_close_test"> </div>
+    <div class="CP_fermer" id="CP_close_next"> </div>
     <form class="CP_form" method="POST" id="form_next" name="test">
         <input class="CP_Message" type="hidden" id="MessageValue" name="Message_Value">
         <p class="CP_Message_next" id="Value_Message">${Message}</p>
@@ -32,7 +32,11 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', functio
     document.body.appendChild(popup)
     document.getElementById('CP_close').addEventListener('click', () => {
             document.getElementById("interface_CP").remove();
+            document.getElementById("interface_CP_next").remove()
     })
+    document.getElementById('CP_close_next').addEventListener('click', () => {
+        document.getElementById("interface_CP_next").remove();
+})
     document.getElementById('nextPost').addEventListener('click', () => {
         Message = document.getElementById("Message").value
         document.getElementById("MessageValue").value = Message
@@ -48,7 +52,6 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', functio
 fetch("http://127.0.0.1:5555/donneesJson")
 .then(response => response.json())
 .then(function (donnee) {
-    console.log(donnee)
     donnee.forEach(element => {
         const posts = document.getElementById("InterfacePost")
         posts.innerHTML += `
