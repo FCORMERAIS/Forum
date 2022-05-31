@@ -15,7 +15,6 @@ if (document.cookie == "") {
     header.appendChild(popup)
     connected = false
 }else {
-    console.log("hello")
     document.getElementById("connected").remove();
     const popup = document.createElement("div")
     popup.classList.add("connected")
