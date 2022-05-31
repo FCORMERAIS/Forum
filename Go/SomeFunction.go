@@ -49,6 +49,9 @@ func CheckPasswordHash(password, hash string) bool {
 
 func KnowLike(listeLike string) int {
 	var Liker = strings.Split(listeLike, " ")
+	if listeLike == "" {
+		return 0
+	}
 	return len(Liker)
 }
 

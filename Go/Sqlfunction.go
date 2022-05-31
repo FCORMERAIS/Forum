@@ -75,7 +75,7 @@ func GetUsernameByID(UUID string) string {
 	return Username
 }
 
-func SendPostinDB(message string) {
+func SendPostinDB(message string, Id_User string) {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture du fichier :")
@@ -83,7 +83,7 @@ func SendPostinDB(message string) {
 	}
 	statement, err := db.Prepare("INSERT INTO Post (ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post) VALUES (?,?,?,?)")
 	var eRR error
-	_, err2 := statement.Exec(uuid.Must(uuid.NewV4(), eRR), uuid.Must(uuid.NewV4(), eRR), uuid.Must(uuid.NewV4(), eRR), message)
+	_, err2 := statement.Exec(uuid.Must(uuid.NewV4(), eRR), Id_User, uuid.Must(uuid.NewV4(), eRR), message)
 	if err != nil || err2 != nil {
 		fmt.Println("Erreur d'insertion :")
 		fmt.Println(err)
@@ -104,18 +104,23 @@ func GetPostDB() []Post {
 		fmt.Println("Erreur de recherche :")
 		fmt.Println(err)
 	}
-	var ID_User string
+	var Username string
 	var Text_Post string
 	var Like string
 	var Dislike string
+	var numberLike int
+	var numberDislike int
 	var singlePost Post
 	for resulttest.Next() {
-		resulttest.Scan(&ID_User, &Text_Post, &Like, &Dislike)
+		resulttest.Scan(&Username, &Text_Post, &Like, &Dislike)
+		Username = GetUsernameByID(Username)
+		numberLike = KnowLike(Like)
+		numberDislike = KnowLike(Dislike)
 		singlePost = Post{
-			IDUser:      ID_User,
+			IDUser:      Username,
 			TextPost:    Text_Post,
-			LikePost:    Like,
-			DislikePost: Dislike,
+			LikePost:    numberLike,
+			DislikePost: numberDislike,
 		}
 		postList.arrayPosts = append(postList.arrayPosts, singlePost)
 	}

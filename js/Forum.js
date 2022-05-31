@@ -1,5 +1,6 @@
 document.getElementsByClassName('triangle')[0]
         .addEventListener('click', function () {
+            console.log(document.cookie)
             const popup = document.createElement("div")
             popup.setAttribute("id","interface_CP");
             popup.classList.add("interface_create_post")
@@ -22,7 +23,7 @@ document.getElementsByClassName('triangle')[0]
             <div class="CP_fermer" id="CP_close_test"> </div>
             <form class="CP_form" method="POST" id="form_next">
             <input class="CP_Message" type="hidden" id="MessageValue">
-            <input type="text">
+            <input type="text">1
             <input class="CP_Send" type="submit" value="&#10145" id="nextPost_test">
             </form>
             `
@@ -56,12 +57,12 @@ fetch("http://127.0.0.1:5555/donneesJson")
         <div class="Post">
             <div class="Interface_User">
                 <img src="https://pic.onlinewebfonts.com/svg/img_329115.png" class="profile_Post" width="35" height="35">
-                <p class="UserName">pseudo</p>
+                <p class="UserName">${element.IDUser}</p>
             </div>
             <p class="Message">${element.TextPost}</p>
             <form class="Barre_dinteraction" method="POST">
-                <button class="ButtonLD" name="Like" type="submit" value='Like : ${element.ID_User_Post}'>&#x1F44D;</button>
-                <button class="ButtonLD" name="Dislike" type="submit" value='Dislike : ${element.ID_User_Post}'>&#128078;</button>
+                <button class="ButtonLD" name="Like" type="submit" value='Like : '>&#x1F44D; ${element.LikePost}</button>
+                <button class="ButtonLD" name="Dislike" type="submit" value='Dislike : '>&#128078;${element.DislikePost}</button>
             </form>
         </div>
         `
