@@ -6,7 +6,7 @@ type User struct {
 }
 
 type Post struct {
-	IDUser      int
+	IDUser      string
 	TextPost    string
 	LikePost    string
 	DislikePost string

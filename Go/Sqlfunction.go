@@ -83,7 +83,7 @@ func SendPostinDB(message string) {
 	}
 	statement, err := db.Prepare("INSERT INTO Post (ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post) VALUES (?,?,?,?)")
 	var eRR error
-	_, err2 := statement.Exec(55, uuid.Must(uuid.NewV4(), eRR), 47, message)
+	_, err2 := statement.Exec(uuid.Must(uuid.NewV4(), eRR), uuid.Must(uuid.NewV4(), eRR), uuid.Must(uuid.NewV4(), eRR), message)
 	if err != nil || err2 != nil {
 		fmt.Println("Erreur d'insertion :")
 		fmt.Println(err)
@@ -104,7 +104,7 @@ func GetPostDB() []Post {
 		fmt.Println("Erreur de recherche :")
 		fmt.Println(err)
 	}
-	var ID_User int
+	var ID_User string
 	var Text_Post string
 	var Like string
 	var Dislike string
