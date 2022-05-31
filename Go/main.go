@@ -124,8 +124,8 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	} else {
 		data.Username = "Invité"
 	}
-	if r.Method == "POST" && r.FormValue("Message_Value") != "" {
-		SendPostinDB(r.FormValue("Message_Value"))
+	if r.Method == "POST" && r.FormValue("Message_Value") != "" && data.Username != "Invité" {
+		SendPostinDB(r.FormValue("Message_Value"), data.Id)
 	}
 	t, err := template.ParseFiles("../templates/Forum.html")
 	if err != nil {
