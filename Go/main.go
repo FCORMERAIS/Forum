@@ -17,7 +17,7 @@ func main() {
 	http.Handle("/static", http.StripPrefix("/static", fileserver))
 	http.HandleFunc("/", Acceuil)
 	http.HandleFunc("/Forum", Forum)
-	http.HandleFunc("/donneesJson", GetJson)
+	http.HandleFunc("/Post", GetJson)
 	fmt.Println("Serving @ : ", "http://"+Port)
 	log.Fatal(http.ListenAndServe(Port, nil))
 }
@@ -30,8 +30,12 @@ func GetJson(w http.ResponseWriter, r *http.Request) {
 func Acceuil(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	fmt.Println(path)
-	var data = User{
-		Username: "Invité",
+	var data User
+	cookie, err := r.Cookie("UserSessionId")
+	if err != nil {
+		data.Username = "Invité"
+	} else {
+		data.Username = GetUsernameByID(cookie.Value)
 	}
 	fmt.Println(r.Method)
 	if path == "/" {
@@ -124,8 +128,21 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	} else {
 		data.Username = "Invité"
 	}
-	if r.Method == "POST" && r.FormValue("Message_Value") != "" && data.Username != "Invité" {
-		SendPostinDB(r.FormValue("Message_Value"), data.Id)
+	if r.Method == "POST" {
+		if r.FormValue("Message_Value") != "" && data.Username != "Invité" {
+			SendPostinDB(r.FormValue("Message_Value"), data.Id)
+		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" {
+			if !Like(GetPostDisike(r.FormValue("Dislike")), data.Id) {
+				addUserLike(data.Id, r.FormValue("Dislike"))
+			}
+			// } else {
+			// 	deleteUserLike(data.Id, r.FormValue("Dislike"))
+			// }
+		} else if r.FormValue("Like") != "" && data.Username != "Invité" {
+			if !Like(GetPostLike(r.FormValue("Like")), data.Id) {
+				addUserDislike(data.Id, r.FormValue("Like"))
+			}
+		}
 	}
 	t, err := template.ParseFiles("../templates/Forum.html")
 	if err != nil {

@@ -6,11 +6,11 @@ type User struct {
 }
 
 type Post struct {
-	IDUser      string
+	Username    string
 	TextPost    string
 	LikePost    int
 	DislikePost int
-	idPost      string
+	IdPost      string
 }
 
 type Categorie struct {

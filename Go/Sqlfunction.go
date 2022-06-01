@@ -111,22 +111,26 @@ func GetPostDB() []Post {
 	var Dislike string
 	var numberLike int
 	var numberDislike int
+	var IdUser string
 	var singlePost Post
 	for resulttest.Next() {
-		resulttest.Scan(&id_post, &Username, &Text_Post, &Like, &Dislike)
-		Username = GetUsernameByID(Username)
+		Like = ""
+		Dislike = ""
+		resulttest.Scan(&id_post, &IdUser, &Text_Post, &Like, &Dislike)
+		fmt.Println(Like, id_post)
+		Username = GetUsernameByID(IdUser)
 		numberLike = KnowLike(Like)
 		numberDislike = KnowLike(Dislike)
 		singlePost = Post{
-			IDUser:      Username,
+			Username:    Username,
 			TextPost:    Text_Post,
 			LikePost:    numberLike,
 			DislikePost: numberDislike,
-			idPost:      id_post,
+			IdPost:      id_post,
 		}
 		postList = append(postList, singlePost)
 	}
-	resulttest.Close()
+	db.Close()
 	return postList
 }
 
@@ -179,7 +183,7 @@ func GetAllCategories() []Categorie {
 	return categories
 }
 
-func addUserLike(uuid string, post_ID string) {
+func addUserLike(userID string, post_ID string) {
 	var resultPost string
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -197,7 +201,7 @@ func addUserLike(uuid string, post_ID string) {
 		result.Scan(&resultPost)
 	}
 	db.Close()
-	resultPost += " " + uuid
+	resultPost += userID + " "
 	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println(err)
@@ -206,12 +210,91 @@ func addUserLike(uuid string, post_ID string) {
 	if err2 != nil {
 		fmt.Println(err2)
 	}
-	tempo, err3 := statement2.Query(resultPost, uuid)
+	tempo, err3 := statement2.Exec(resultPost, post_ID)
 	if err3 != nil {
 		fmt.Println(err3)
 	}
 	if tempo == nil {
 		fmt.Println("tempo is empty")
 	}
+	db2.Close()
+}
+
+func addUserDislike(userID string, post_ID string) {
+	var resultPost string
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement, err2 := db.Prepare("SELECT Dislike FROM Post WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	result, err3 := statement.Query(post_ID)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	for result.Next() {
+		result.Scan(&resultPost)
+	}
 	db.Close()
+	resultPost += userID + " "
+	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement2, err2 := db2.Prepare("UPDATE Post SET Dislike = ? WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	tempo, err3 := statement2.Exec(resultPost, post_ID)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	if tempo == nil {
+		fmt.Println("tempo is empty")
+	}
+	db2.Close()
+}
+
+func GetPostLike(uuid string) string {
+	var likestr string
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	tableCategorie, err2 := db.Prepare("SELECT Like FROM Post WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	result, err3 := tableCategorie.Query(uuid)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	for result.Next() {
+		result.Scan(&likestr)
+	}
+	db.Close()
+	return likestr
+}
+
+func GetPostDisike(uuid string) string {
+	var dislikestr string
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	tableCategorie, err2 := db.Prepare("SELECT Dislike FROM Post WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	result, err3 := tableCategorie.Query(uuid)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	for result.Next() {
+		result.Scan(&dislikestr)
+	}
+	db.Close()
+	return dislikestr
 }

@@ -49,7 +49,7 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', functio
 });
 
 
-fetch("http://127.0.0.1:5555/donneesJson")
+fetch("http://127.0.0.1:5555/Post")
 .then(response => response.json())
 .then(function (donnee) {
     console.log(donnee)
@@ -59,12 +59,16 @@ fetch("http://127.0.0.1:5555/donneesJson")
         <div class="Post">
             <div class="Interface_User">
                 <img src="https://pic.onlinewebfonts.com/svg/img_329115.png" class="profile_Post" width="35" height="35">
-                <p class="UserName">${element.IDUser}</p>
+                <p class="UserName">${element.Username}</p>
             </div>
             <p class="Message">${element.TextPost}</p>
-            <form class="Barre_dinteraction" method="POST">
-                <button class="ButtonLD" name="Like" type="submit" value=${element.idPost}>&#x1F44D; ${element.LikePost}</button>
-                <button class="ButtonLD" name="Dislike" type="submit" value=${element.idPost}>&#128078;${element.DislikePost}</button>
+            <form class="LikePost" method="POST">
+                <input type="hidden" name="Like" value="${element.IdPost}">
+                <button class="ButtonLD" type="submit">&#x1F44D; ${element.LikePost}</button>
+            </form>
+            <form class="DislikePost" method="POST">
+                <input type="hidden" name="Dislike" value="${element.IdPost}">
+                <button class="ButtonLD" type="submit">&#128078;${element.DislikePost}</button>
             </form>
         </div>
         `
