@@ -133,14 +133,14 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			SendPostinDB(r.FormValue("Message_Value"), data.Id)
 		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" {
 			if !Like(GetPostDisike(r.FormValue("Dislike")), data.Id) {
-				addUserLike(data.Id, r.FormValue("Dislike"))
+				addUserDislike(data.Id, r.FormValue("Dislike"))
 			}
 			// } else {
 			// 	deleteUserLike(data.Id, r.FormValue("Dislike"))
 			// }
 		} else if r.FormValue("Like") != "" && data.Username != "Invité" {
 			if !Like(GetPostLike(r.FormValue("Like")), data.Id) {
-				addUserDislike(data.Id, r.FormValue("Like"))
+				addUserLike(data.Id, r.FormValue("Like"))
 			}
 		}
 	}
