@@ -18,6 +18,7 @@ func main() {
 	http.HandleFunc("/", Acceuil)
 	http.HandleFunc("/Forum", Forum)
 	http.HandleFunc("/donneesJson", GetJson)
+	http.HandleFunc("/JsonCategories", GetCategories)
 	fmt.Println("Serving @ : ", "http://"+Port)
 	log.Fatal(http.ListenAndServe(Port, nil))
 }
@@ -137,4 +138,9 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	if err2 != nil {
 		fmt.Println(err2)
 	}
+}
+
+func GetCategories(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(GetAllCategories())
 }

@@ -1,6 +1,5 @@
-document.getElementsByClassName('triangle')[0].addEventListener('click', function () {
+document.getElementsByClassName('triangle')[0].addEventListener('click', async function () {
     if (document.cookie !="") {
-        let Message = ""
         const popup = document.createElement("div")
         popup.setAttribute("id","interface_CP");
         popup.classList.add("interface_create_post")
@@ -12,19 +11,28 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', functio
         <div class="CP_fermer" id="CP_close"> </div>
         <p class="ajout_photo">&#128193;</p>
         `
-        
+        let options =""
+        await fetch("http://127.0.0.1:5555/JsonCategories")
+            .then(response => response.json())
+            .then( function (categories) {
+                categories.forEach(categorie => {
+                    console.log(categorie)
+                    options +=`
+                    <option value="${categorie.Name}">${categorie.Name}</option>
+                    `
+                }) 
+            })
         const popupNext = document.createElement("div")
         popupNext.setAttribute("id","interface_CP_next");
         popupNext.classList.add('interface_create_post_Next')
         popupNext.innerHTML =
         `
-        <div class="CP_fermer" id="CP_close_test"> </div>
+        <div class="CP_fermer" id="CP_close_next"> </div>
         <form class="CP_form" method="POST" id="form_next" name="test">
             <input class="CP_Message" type="hidden" id="MessageValue" name="Message_Value">
-            <p class="CP_Message_next" id="Value_Message">${Message}</p>
-            <select name="Categorie" id="city-select">
-                <option value=Technologie>Technologie</option>
-                <option value=Debat>Debat</option>
+            <p class="CP_Message" id="Value_Message"></p>
+            <select name="Categorie" id="categorie" class="Categories_CP">
+            ${options}
             </select>
             <input class="CP_Send" type="submit" value="&#10145" id="publishPost">
         </form>
@@ -40,11 +48,12 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', functio
     })
     document.getElementById('CP_close_next').addEventListener('click', () => {
         document.getElementById("interface_CP_next").remove();
+        document.getElementById("interface_CP").remove();
 })
     document.getElementById('nextPost').addEventListener('click', () => {
-        Message = document.getElementById("Message").value
+        let Message = document.getElementById("Message").value
         document.getElementById("MessageValue").value = Message
-        console.log("Value" + Message)
+        document.getElementById("Value_Message").innerHTML = Message
         document.getElementsByClassName("interface_create_post_Next")[0].style.zIndex = "7";
     });
     document.getElementById('form_next').addEventListener('submit', () => {
@@ -74,3 +83,8 @@ fetch("http://127.0.0.1:5555/donneesJson")
         document.body.appendChild(posts)
     });
 })
+
+
+
+
+//<option value=> </option></option>
