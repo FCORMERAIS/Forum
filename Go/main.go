@@ -163,7 +163,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 }
 
 func error404(w http.ResponseWriter, r *http.Request) { // fonction qui affiche la page de l'erreur 404
-	tmpl, err := template.ParseFiles("./templates/error404.html") // utilisation du fichier error pour le template
+	tmpl, err := template.ParseFiles("../templates/error404.html") // utilisation du fichier error pour le template
 	if err != nil {
 		fmt.Println(err)
 	}

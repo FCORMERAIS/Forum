@@ -105,30 +105,14 @@ func GetPostDB() []Post {
 		fmt.Println("Erreur de recherche :")
 		fmt.Println(err)
 	}
-	var Username string
-	var Text_Post string
-	var id_post string
-	var Like string
-	var Dislike string
-	var numberLike int
-	var numberDislike int
-	var IdUser string
-	var singlePost Post
 	for resulttest.Next() {
-		Like = ""
-		Dislike = ""
-		resulttest.Scan(&id_post, &IdUser, &Text_Post, &Like, &Dislike)
-		fmt.Println(Like, id_post)
-		Username = GetUsernameByID(IdUser)
-		numberLike = KnowLike(Like)
-		numberDislike = KnowLike(Dislike)
-		singlePost = Post{
-			Username:    Username,
-			TextPost:    Text_Post,
-			LikePost:    numberLike,
-			DislikePost: numberDislike,
-			IdPost:      id_post,
-		}
+		var singlePost Post
+		var Like, Dislike, IdUser string
+		resulttest.Scan(&singlePost.IdPost, &IdUser, &singlePost.TextPost, &Like, &Dislike)
+		singlePost.Username = GetUsernameByID(IdUser)
+		singlePost.LikePost = KnowLike(Like)
+		singlePost.DislikePost = KnowLike(Dislike)
+		singlePost.CommentaryPost = GetCommmentary(singlePost.IdPost)
 		postList = append(postList, singlePost)
 	}
 	db.Close()

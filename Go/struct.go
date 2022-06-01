@@ -28,6 +28,6 @@ type Commentary struct {
 	IdPost       string
 	IdCommentary string
 	Text         string
-	Like         int
-	Dislike      int
+	// Like         int
+	// Dislike      int
 }
