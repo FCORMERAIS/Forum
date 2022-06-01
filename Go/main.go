@@ -131,8 +131,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "POST" {
 		if r.FormValue("Message_Value") != "" && data.Username != "Invité" {
-			SendPostinDB(r.FormValue("Message_Value"), data.Id)
-			fmt.Println(r.FormValue("Categorie"))
+			SendPostinDB(r.FormValue("Message_Value"), data.Id, GetIdCategorie(r.FormValue("Categorie")))
 		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" {
 			if !Like(GetPostDisike(r.FormValue("Dislike")), data.Id) {
 				addUserDislike(data.Id, r.FormValue("Dislike"))

@@ -75,7 +75,7 @@ func GetUsernameByID(UUID string) string {
 	return Username
 }
 
-func SendPostinDB(message string, Id_User string) {
+func SendPostinDB(message string, Id_User string, categorie string) {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture du fichier :")
@@ -83,7 +83,7 @@ func SendPostinDB(message string, Id_User string) {
 	}
 	statement, err := db.Prepare("INSERT INTO Post (ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post) VALUES (?,?,?,?)")
 	var eRR error
-	_, err2 := statement.Exec(uuid.Must(uuid.NewV4(), eRR), Id_User, uuid.Must(uuid.NewV4(), eRR), message)
+	_, err2 := statement.Exec(uuid.Must(uuid.NewV4(), eRR), Id_User, categorie, message)
 	if err != nil || err2 != nil {
 		fmt.Println("Erreur d'insertion :")
 		fmt.Println(err)
@@ -297,4 +297,26 @@ func GetPostDisike(uuid string) string {
 	}
 	db.Close()
 	return dislikestr
+}
+
+func GetIdCategorie(categorie string) string {
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement, err2 := db.Prepare("SELECT ID_Categorie FROM Categorie WHERE Name = ?")
+	if err2 != nil {
+		fmt.Println("Erreur ouverture du fichier : ", err2)
+	}
+	result, err3 := statement.Query(categorie)
+	if err3 != nil {
+		fmt.Println("Erreur ouverture du fichier : ", err3)
+	}
+	db.Close()
+	var IdCategorie string
+	for result.Next() {
+		result.Scan(&IdCategorie)
+	}
+	return IdCategorie
+
 }
