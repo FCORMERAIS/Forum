@@ -76,18 +76,32 @@ fetch("http://127.0.0.1:5555/Post")
                 <input type="hidden" name="idPost" value="${element.IdPost}">
                 <input type="text" name="textCommentary"> 
             </form>
-            <div class="commentary" id="commentary">
+            <div class="commentary" id=${element.IdPost}>
             </div>
         </div>
         `
-        element.CommentaryPost.forEach(commentary => {
-            const comm = document.getElementById("commentary")
-            const comment = document.createElement("div")
-            comment.innerHTML =`
-            <p>${commentary.Username} : ${commentary.Text}</p>
-            `
-            comm.appendChild(comment)
-        });
+        if (element.CommentaryPost != null) {
+            element.CommentaryPost.forEach(commentary => {
+                const comm = document.getElementById(commentary.IdPost)
+                const comment = document.createElement("div")
+                comment.innerHTML =`
+                <div class="comm" style="display:flex">
+                    <p>${commentary.Username} : ${commentary.Text}</p>
+                    <div class=likeDislike style="display:flex">
+                        <form class="LikeComment" method="POST">
+                            <input type="hidden" name="LikeComm" value="${commentary.IdCommentary}">
+                            <button class="ButtonLD" type="submit">&#x1F44D; ${commentary.Like}</button>
+                        </form>
+                        <form class="DislikeComment" method="POST">
+                            <input type="hidden" name="DislikeComm" value="${commentary.IdCommentary}">
+                            <button class="ButtonLD" type="submit">&#128078;${commentary.Dislike}</button>
+                        </form>
+                    </div>
+                </div>
+                `
+                comm.appendChild(comment)
+            });
+        }
         document.body.appendChild(posts)
     });
 })

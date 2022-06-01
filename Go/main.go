@@ -129,22 +129,38 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			SendPostinDB(r.FormValue("Message_Value"), data.Id)
 		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" {
 			if !Like(GetPostDisike(r.FormValue("Dislike")), data.Id) {
-				deleteUserLike(data.Id, r.FormValue("Dislike"))
-				addUserDislike(data.Id, r.FormValue("Dislike"))
+				deleteUserLikePost(data.Id, r.FormValue("Dislike"))
+				addUserDislikePost(data.Id, r.FormValue("Dislike"))
 			} else {
-				deleteUserLike(data.Id, r.FormValue("Dislike"))
-				deleteUserDislike(data.Id, r.FormValue("Dislike"))
+				deleteUserLikePost(data.Id, r.FormValue("Dislike"))
+				deleteUserDislikePost(data.Id, r.FormValue("Dislike"))
 			}
 		} else if r.FormValue("Like") != "" && data.Username != "Invité" {
 			if !Like(GetPostLike(r.FormValue("Like")), data.Id) {
-				deleteUserDislike(data.Id, r.FormValue("Like"))
-				addUserLike(data.Id, r.FormValue("Like"))
+				deleteUserDislikePost(data.Id, r.FormValue("Like"))
+				addUserLikePost(data.Id, r.FormValue("Like"))
 			} else {
-				deleteUserDislike(data.Id, r.FormValue("Like"))
-				deleteUserLike(data.Id, r.FormValue("Like"))
+				deleteUserDislikePost(data.Id, r.FormValue("Like"))
+				deleteUserLikePost(data.Id, r.FormValue("Like"))
 			}
 		} else if r.FormValue("idPost") != "" && data.Username != "Invité" && r.FormValue("textCommentary") != "" {
 			addCommentary(r.FormValue("idPost"), r.FormValue("textCommentary"), data.Id)
+		} else if data.Username != "Invité" && r.FormValue("LikeComm") != "" {
+			if !Like(GetCommentLike(r.FormValue("LikeComm")), data.Id) {
+				deleteUserDislikeComment(data.Id, r.FormValue("LikeComm"))
+				addUserLikeComment(data.Id, r.FormValue("LikeComm"))
+			} else {
+				deleteUserDislikeComment(data.Id, r.FormValue("LikeComm"))
+				deleteUserLikeComment(data.Id, r.FormValue("LikeComm"))
+			}
+		} else if data.Username != "Invité" && r.FormValue("DislikeComm") != "" {
+			if !Like(GetCommentDislike(r.FormValue("DislikeComm")), data.Id) {
+				deleteUserLikeComment(data.Id, r.FormValue("DislikeComm"))
+				addUserDislikeComment(data.Id, r.FormValue("DislikeComm"))
+			} else {
+				deleteUserDislikeComment(data.Id, r.FormValue("DislikeComm"))
+				deleteUserLikeComment(data.Id, r.FormValue("DislikeComm"))
+			}
 		} else {
 			error404(w, r)
 		}
