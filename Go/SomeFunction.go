@@ -9,6 +9,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// fonction vérifiant si le mot de passe est assez sécurisé (10 caractère, 1 maj , 1 min, 1 caractère spécial, 1 chiffre)
 func passwordGood(mdp string, w http.ResponseWriter) bool {
 	if len(mdp) < 10 {
 		fmt.Fprintf(w, `<p class="error_message">le MDP EST TROP COURT</p>`)
@@ -37,16 +38,19 @@ func passwordGood(mdp string, w http.ResponseWriter) bool {
 	return true
 }
 
+//fonction permettant de hasher un password
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 	return string(bytes), err
 }
 
+//fonction permettant de vérifier si un password hasher est bien égal au mot de passe que rentre l'utilisateur
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
 
+//fonction permettant de savoir le nombre de like dans un post ou un commentaires grace a une chaine de caractère
 func KnowLike(listeLike string) int {
 	var Liker = strings.Split(listeLike, "#")
 	if listeLike == "" {
@@ -55,6 +59,7 @@ func KnowLike(listeLike string) int {
 	return len(Liker) - 1
 }
 
+//fonction permettant de vérifier si l'utilisateur a liker ou nan un post ou un commentaires grace a son id et a une string (renvoie un bool)
 func Like(listeLike string, userID string) bool {
 	var Liker = strings.Split(listeLike, "#")
 	for _, b := range Liker {

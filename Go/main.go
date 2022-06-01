@@ -88,10 +88,10 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 		path = ".." + path
 	}
 	if r.URL.Path == "/" {
-		t, err := template.ParseFiles("../templates/server.html", "../templates/header.html")
+		t, err := template.ParseFiles("../templates/server.html", "../templates/header.html") // on parse les fichier html que l'on a besoin pour afficher la page voulut
 		if err != nil {
 			fmt.Println(err)
-			error404(w, r)
+			error404(w, r) // si il y a un problème on lance la fonctio nerror 404
 		}
 		err2 := t.Execute(w, data)
 		if err2 != nil {
@@ -124,54 +124,54 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	} else {
 		data.Username = "Invité"
 	}
-	if r.Method == "POST" {
-		if r.FormValue("Message_Value") != "" && data.Username != "Invité" {
+	if r.Method == "POST" { // si l'utilisateur envois un POST
+		if r.FormValue("Message_Value") != "" && data.Username != "Invité" { // on vérifie si il s connécté ou si cest le cas l'utilisateur poste un message
 			SendPostinDB(r.FormValue("Message_Value"), data.Id)
-		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" {
+		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" { // si l'utilisateur rentre ici c'est qu'il essaye de disliker un post et qu'il ne la pas déja disliker
 			if !Like(GetPostDisike(r.FormValue("Dislike")), data.Id) {
 				deleteUserLikePost(data.Id, r.FormValue("Dislike"))
 				addUserDislikePost(data.Id, r.FormValue("Dislike"))
-			} else {
+			} else { // ici l'utilisateur essaie de disliker un post mais il la déjà disliker
 				deleteUserLikePost(data.Id, r.FormValue("Dislike"))
 				deleteUserDislikePost(data.Id, r.FormValue("Dislike"))
 			}
-		} else if r.FormValue("Like") != "" && data.Username != "Invité" {
+		} else if r.FormValue("Like") != "" && data.Username != "Invité" { // ici lutilisateur essaye de liker un post quil na pas encore liker
 			if !Like(GetPostLike(r.FormValue("Like")), data.Id) {
 				deleteUserDislikePost(data.Id, r.FormValue("Like"))
 				addUserLikePost(data.Id, r.FormValue("Like"))
-			} else {
+			} else { // ici l'utilisateur essaye de liker un post qu'il a déjà liker
 				deleteUserDislikePost(data.Id, r.FormValue("Like"))
 				deleteUserLikePost(data.Id, r.FormValue("Like"))
 			}
-		} else if r.FormValue("idPost") != "" && data.Username != "Invité" && r.FormValue("textCommentary") != "" {
+		} else if r.FormValue("idPost") != "" && data.Username != "Invité" && r.FormValue("textCommentary") != "" { // l'utilisateur post un commentaire
 			addCommentary(r.FormValue("idPost"), r.FormValue("textCommentary"), data.Id)
-		} else if data.Username != "Invité" && r.FormValue("LikeComm") != "" {
+		} else if data.Username != "Invité" && r.FormValue("LikeComm") != "" { // l'utilisateur like un commentaire qu'il n'a pas encore liker
 			if !Like(GetCommentLike(r.FormValue("LikeComm")), data.Id) {
 				deleteUserDislikeComment(data.Id, r.FormValue("LikeComm"))
 				addUserLikeComment(data.Id, r.FormValue("LikeComm"))
-			} else {
+			} else { // l'utilisateur like un commentaire qu'il a déjà liker
 				deleteUserDislikeComment(data.Id, r.FormValue("LikeComm"))
 				deleteUserLikeComment(data.Id, r.FormValue("LikeComm"))
 			}
-		} else if data.Username != "Invité" && r.FormValue("DislikeComm") != "" {
+		} else if data.Username != "Invité" && r.FormValue("DislikeComm") != "" { // l'utilisateur dislike un commentaire qu'il n'a pas encore liker
 			if !Like(GetCommentDislike(r.FormValue("DislikeComm")), data.Id) {
 				deleteUserLikeComment(data.Id, r.FormValue("DislikeComm"))
 				addUserDislikeComment(data.Id, r.FormValue("DislikeComm"))
-			} else {
+			} else { // l'utilisateur dislike un commentaire u'il a déjà disliker
 				deleteUserDislikeComment(data.Id, r.FormValue("DislikeComm"))
 				deleteUserLikeComment(data.Id, r.FormValue("DislikeComm"))
 			}
-		} else {
+		} else { // sinon il y a une erreur et lance l'erreur 404
 			error404(w, r)
 		}
 	}
-	t, err := template.ParseFiles("../templates/Forum.html")
+	t, err := template.ParseFiles("../templates/Forum.html") // on charge la templates du Forum
 	if err != nil {
 		fmt.Println(err)
 	}
 	Page.User = data
 	Page.ListCategories = Categories
-	err2 := t.Execute(w, Page)
+	err2 := t.Execute(w, Page) // on l'éxecute
 	if err2 != nil {
 		fmt.Println(err2)
 		error404(w, r)

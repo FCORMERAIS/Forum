@@ -8,6 +8,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// fonction permettant de rajouter un compte dans la base de données
 func SignUp(Useremail string, Userusername string, Userpassword string) User {
 	var err error
 	Id := uuid.Must(uuid.NewV4(), err)
@@ -31,6 +32,7 @@ func SignUp(Useremail string, Userusername string, Userpassword string) User {
 	}
 }
 
+//fonction permettant de vérifier si l'adresse email rentrer par l'utilisateur lorsque qu'il se connecte existe bien si elle existe on renvoie son mot de passe
 func goodMail(mail string) string {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -55,6 +57,7 @@ func goodMail(mail string) string {
 	return password
 }
 
+//fonction permettant de recuperer un username depuis un id de User
 func GetUsernameByID(UUID string) string {
 	db, err1 := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err1 != nil {
@@ -76,6 +79,7 @@ func GetUsernameByID(UUID string) string {
 	return Username
 }
 
+//fonction permettant de rajouter un post dans la base de données
 func SendPostinDB(message string, Id_User string) {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -93,6 +97,7 @@ func SendPostinDB(message string, Id_User string) {
 	db.Close()
 }
 
+//Fonction permettant de recuperer tout les posts de la base de données
 func GetPostDB() []Post {
 	var postList []Post
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -119,6 +124,7 @@ func GetPostDB() []Post {
 	return postList
 }
 
+//fonction permettant de récuperer un Objet User grace au username de la personne
 func connected(useremail string) User {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -142,11 +148,7 @@ func connected(useremail string) User {
 	}
 }
 
-func PostWithCategories(categorie string) []Post {
-	var Posts []Post
-	return Posts
-}
-
+//fonction permettant de recuperer toutes les catégories stockés dans la base de données
 func GetAllCategories() []Categorie {
 	var categories []Categorie
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -168,6 +170,7 @@ func GetAllCategories() []Categorie {
 	return categories
 }
 
+//fonction permettant de rajouter un like sur un commentaire grace au post_id et a l'id de l'utilisateur
 func addUserLikePost(userID string, post_ID string) {
 	resultPost := GetPostLike(post_ID) + userID + "#"
 	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -188,6 +191,7 @@ func addUserLikePost(userID string, post_ID string) {
 	db2.Close()
 }
 
+//fonction permettant de rajouter un like sur un commentaire grace au post_id et a l'id de l'utilisateur
 func addUserLikeComment(userID string, post_ID string) {
 	resultPost := GetCommentLike(post_ID) + userID + "#"
 	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -208,6 +212,7 @@ func addUserLikeComment(userID string, post_ID string) {
 	db2.Close()
 }
 
+//fonction permettant de récuperer les données des likes d'un post grace a l'id du post dans la base SQL
 func GetPostLike(uuid string) string {
 	var likestr string
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -229,6 +234,7 @@ func GetPostLike(uuid string) string {
 	return likestr
 }
 
+//fonction permettant de supprimer un dislikes sur un Post grace au post_id et a l'id de l'utilisateur
 func deleteUserDislikePost(userID string, post_ID string) {
 	resultPost := strings.Split(GetPostDisike(post_ID), "#")
 	index := -1
@@ -261,6 +267,7 @@ func deleteUserDislikePost(userID string, post_ID string) {
 	db2.Close()
 }
 
+//fonction permettant de supprimer un dislikes sur un commentaire grace au post_id et a l'id de l'utilisateur
 func deleteUserDislikeComment(userID string, post_ID string) {
 	resultPost := strings.Split(GetCommentDislike(post_ID), "#")
 	index := -1
@@ -293,6 +300,7 @@ func deleteUserDislikeComment(userID string, post_ID string) {
 	db2.Close()
 }
 
+//fonction permettant de rajouter un like sur un Post grace au post_id et a l'id de l'utilisateur
 func deleteUserLikePost(userID string, post_ID string) {
 	resultPost := strings.Split(GetPostLike(post_ID), "#")
 	index := -1
@@ -325,6 +333,7 @@ func deleteUserLikePost(userID string, post_ID string) {
 	db2.Close()
 }
 
+//fonction permettant de rajouter un like sur un Commentaire grace au post_id et a l'id de l'utilisateur
 func deleteUserLikeComment(userID string, post_ID string) {
 	resultPost := strings.Split(GetCommentLike(post_ID), "#")
 	index := -1
@@ -357,6 +366,7 @@ func deleteUserLikeComment(userID string, post_ID string) {
 	db2.Close()
 }
 
+//fonction permettant de rajouter un dislikes sur un Post grace au post_id et a l'id de l'utilisateur
 func addUserDislikePost(userID string, post_ID string) {
 	resultPost := GetPostDisike(post_ID) + userID + "#"
 	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -377,6 +387,7 @@ func addUserDislikePost(userID string, post_ID string) {
 	db2.Close()
 }
 
+//fonction permettant de rajouter un dislikes sur un commentaire grace au post_id et a l'id de l'utilisateur
 func addUserDislikeComment(userID string, post_ID string) {
 	resultPost := GetCommentDislike(post_ID) + userID + "#"
 	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -397,6 +408,7 @@ func addUserDislikeComment(userID string, post_ID string) {
 	db2.Close()
 }
 
+//fonction permettant de recupérer les Likes d'un commentaire grace a son id
 func GetCommentLike(uuid string) string {
 	var likestr string
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -418,6 +430,7 @@ func GetCommentLike(uuid string) string {
 	return likestr
 }
 
+//fonction permettant de recupérer les dislikes d'un commentaire grace a son id
 func GetCommentDislike(uuid string) string {
 	var likestr string
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -439,6 +452,7 @@ func GetCommentDislike(uuid string) string {
 	return likestr
 }
 
+//fonction permettant d'avoir tout les dislike d'un post grace a son ID
 func GetPostDisike(uuidPost string) string {
 	var dislikestr string
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
@@ -461,6 +475,7 @@ func GetPostDisike(uuidPost string) string {
 	return dislikestr
 }
 
+//fonction permettant d'ajouter a la base de donnée un commentaire il suffit d'envoyer l'id du post le text que l'on veut ajouter ainsi que l'id du User
 func addCommentary(IdPost string, text string, IDUser string) {
 	var err error
 	IdCommentary := uuid.Must(uuid.NewV4(), err)
@@ -476,6 +491,7 @@ func addCommentary(IdPost string, text string, IDUser string) {
 	db.Close()
 }
 
+//cette fonction permet d'avoir la liste des commentaire d'un post en envoyant l'id d'un post
 func GetCommmentary(idPost string) []Commentary {
 	var ListCommentary []Commentary
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
