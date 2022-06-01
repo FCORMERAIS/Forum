@@ -52,13 +52,13 @@ func KnowLike(listeLike string) int {
 	if listeLike == "" {
 		return 0
 	}
-	return len(Liker)
+	return len(Liker) - 1
 }
 
-func Like(listeLike string, uuid string) bool {
+func Like(listeLike string, userID string) bool {
 	var Liker = strings.Split(listeLike, " ")
 	for _, b := range Liker {
-		if b == uuid {
+		if b == userID {
 			return true
 		}
 	}
