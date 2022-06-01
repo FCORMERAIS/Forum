@@ -6,11 +6,12 @@ type User struct {
 }
 
 type Post struct {
-	Username    string
-	TextPost    string
-	LikePost    int
-	DislikePost int
-	IdPost      string
+	Username       string
+	TextPost       string
+	LikePost       int
+	DislikePost    int
+	IdPost         string
+	CommentaryPost []Commentary
 }
 
 type Categorie struct {
@@ -21,4 +22,12 @@ type Categorie struct {
 type ForumPage struct {
 	User           User
 	ListCategories []Categorie
+}
+
+type Commentary struct {
+	IdPost       string
+	IdCommentary string
+	Text         string
+	Like         int
+	Dislike      int
 }

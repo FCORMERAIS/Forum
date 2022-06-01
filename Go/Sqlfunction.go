@@ -372,3 +372,41 @@ func GetPostDisike(uuidPost string) string {
 	fmt.Println("ICI", dislikestr)
 	return dislikestr
 }
+
+func addCommentary(IdPost string, text string) {
+	var err error
+	IdCommentary := uuid.Must(uuid.NewV4(), err)
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement, err2 := db.Prepare("INSERT INTO Commentaire (ID_Commentaire, Text_Commentaire, Post_ID) VALUES (?,?, ?)")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	statement.Exec(IdCommentary, text, IdPost)
+	db.Close()
+}
+
+func GetCommmentary(idPost string) []Commentary {
+	var ListCommentary []Commentary
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement, err2 := db.Prepare("SELECT * FROM Commentaire WHERE Post_ID = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	result, err3 := statement.Query(idPost)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	for result.Next() {
+		var Commentary Commentary
+		result.Scan(&Commentary.IdCommentary, &Commentary.Text, &Commentary.IdPost)
+		ListCommentary = append(ListCommentary, Commentary)
+	}
+	db.Close()
+	return ListCommentary
+}

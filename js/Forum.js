@@ -62,16 +62,27 @@ fetch("http://127.0.0.1:5555/Post")
                 <p class="UserName">${element.Username}</p>
             </div>
             <p class="Message">${element.TextPost}</p>
-            <form class="LikePost" method="POST">
-                <input type="hidden" name="Like" value="${element.IdPost}">
-                <button class="ButtonLD" type="submit">&#x1F44D; ${element.LikePost}</button>
-            </form>
+            <div class=likeDislike style="display:flex">
+                <form class="LikePost" method="POST">
+                    <input type="hidden" name="Like" value="${element.IdPost}">
+                    <button class="ButtonLD" type="submit">&#x1F44D; ${element.LikePost}</button>
+                </form>
+                <form class="DislikePost" method="POST">
+                    <input type="hidden" name="Dislike" value="${element.IdPost}">
+                    <button class="ButtonLD" type="submit">&#128078;${element.DislikePost}</button>
+                </form>
+            </div>
             <form class="DislikePost" method="POST">
-                <input type="hidden" name="Dislike" value="${element.IdPost}">
-                <button class="ButtonLD" type="submit">&#128078;${element.DislikePost}</button>
+                <input type="hidden" name="idPost" value="${element.IdPost}">
+                <input type="text" name="textCommentary"> 
             </form>
+            <div class="commentary">
+            </div>
         </div>
         `
+        // element.Commentary.forEach(element => {
+        //     console.log("hello")
+        // });
         document.body.appendChild(posts)
     });
 })

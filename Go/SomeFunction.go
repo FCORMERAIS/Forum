@@ -49,7 +49,6 @@ func CheckPasswordHash(password, hash string) bool {
 
 func KnowLike(listeLike string) int {
 	var Liker = strings.Split(listeLike, "#")
-	fmt.Println(Liker)
 	if listeLike == "" {
 		return 0
 	}
@@ -64,12 +63,4 @@ func Like(listeLike string, userID string) bool {
 		}
 	}
 	return false
-}
-
-func trieMostLike(ListPost []Post) []Post {
-	return ListPost
-}
-
-func trieLowLike(ListPost []Post) []Post {
-	return ListPost
 }
