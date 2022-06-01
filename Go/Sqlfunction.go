@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -184,24 +185,7 @@ func GetAllCategories() []Categorie {
 }
 
 func addUserLike(userID string, post_ID string) {
-	var resultPost string
-	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
-	if err != nil {
-		fmt.Println(err)
-	}
-	statement, err2 := db.Prepare("SELECT Like FROM Post WHERE ID_Post = ?")
-	if err2 != nil {
-		fmt.Println(err2)
-	}
-	result, err3 := statement.Query(post_ID)
-	if err3 != nil {
-		fmt.Println(err3)
-	}
-	for result.Next() {
-		result.Scan(&resultPost)
-	}
-	db.Close()
-	resultPost += userID + " "
+	resultPost := getLike(post_ID) + userID + "#"
 	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println(err)
@@ -220,7 +204,7 @@ func addUserLike(userID string, post_ID string) {
 	db2.Close()
 }
 
-func addUserDislike(userID string, post_ID string) {
+func GetDislike(post_ID string) string {
 	var resultPost string
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -238,7 +222,96 @@ func addUserDislike(userID string, post_ID string) {
 		result.Scan(&resultPost)
 	}
 	db.Close()
-	resultPost += userID + " "
+	return resultPost
+}
+
+func getLike(post_ID string) string {
+	var resultPost string
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement, err2 := db.Prepare("SELECT Like FROM Post WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	result, err3 := statement.Query(post_ID)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	for result.Next() {
+		result.Scan(&resultPost)
+	}
+	db.Close()
+	return resultPost
+}
+
+func deleteUserDislike(userID string, post_ID string) {
+	resultPost := strings.Split(GetDislike(post_ID), "#")
+	index := -1
+	for i := 0; i < len(resultPost); i++ {
+		if userID == resultPost[i] {
+			index = i
+		}
+	}
+	if index != -1 {
+		resultPost[index] = resultPost[len(resultPost)-1]
+		resultPost[len(resultPost)-1] = ""
+		resultPost = resultPost[:len(resultPost)-1]
+	}
+	resultPost2 := strings.Join(resultPost, "#")
+	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement2, err2 := db2.Prepare("UPDATE Post SET Dislike = ? WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	tempo, err3 := statement2.Exec(resultPost2, post_ID)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	if tempo == nil {
+		fmt.Println("tempo is empty")
+	}
+	db2.Close()
+}
+
+func deleteUserLike(userID string, post_ID string) {
+	resultPost := strings.Split(getLike(post_ID), "#")
+	index := -1
+	for i := 0; i < len(resultPost); i++ {
+		if userID == resultPost[i] {
+			index = i
+		}
+	}
+	if index != -1 {
+		resultPost[index] = resultPost[len(resultPost)-1]
+		resultPost[len(resultPost)-1] = ""
+		resultPost = resultPost[:len(resultPost)-1]
+	}
+	resultPost2 := strings.Join(resultPost, "#")
+	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement2, err2 := db2.Prepare("UPDATE Post SET Like = ? WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	tempo, err3 := statement2.Exec(resultPost2, post_ID)
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	if tempo == nil {
+		fmt.Println("tempo is empty")
+	}
+	db2.Close()
+}
+
+func addUserDislike(userID string, post_ID string) {
+	resultPost := GetDislike(post_ID) + userID + "#"
 	db2, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println(err)
@@ -278,7 +351,7 @@ func GetPostLike(uuid string) string {
 	return likestr
 }
 
-func GetPostDisike(uuid string) string {
+func GetPostDisike(uuidPost string) string {
 	var dislikestr string
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -288,7 +361,7 @@ func GetPostDisike(uuid string) string {
 	if err2 != nil {
 		fmt.Println(err2)
 	}
-	result, err3 := tableCategorie.Query(uuid)
+	result, err3 := tableCategorie.Query(uuidPost)
 	if err3 != nil {
 		fmt.Println(err3)
 	}
@@ -296,5 +369,6 @@ func GetPostDisike(uuid string) string {
 		result.Scan(&dislikestr)
 	}
 	db.Close()
+	fmt.Println("ICI", dislikestr)
 	return dislikestr
 }

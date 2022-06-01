@@ -14,7 +14,7 @@ func passwordGood(mdp string, w http.ResponseWriter) bool {
 		fmt.Fprintf(w, `<p class="error_message">le MDP EST TROP COURT</p>`)
 		return false
 	}
-	r, _ := regexp.Compile("1|2|3|4|5|6|7|8|9")
+	r, _ := regexp.Compile("1|2|3|4|5|6|7|8|9|0")
 	if !r.MatchString(mdp) {
 		fmt.Fprintf(w, `<p class="error_message">IL MANQUE UN CHIFFRE DANS VOTRE MDP</p>`)
 		return false
@@ -48,7 +48,8 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 func KnowLike(listeLike string) int {
-	var Liker = strings.Split(listeLike, " ")
+	var Liker = strings.Split(listeLike, "#")
+	fmt.Println(Liker)
 	if listeLike == "" {
 		return 0
 	}
@@ -56,7 +57,7 @@ func KnowLike(listeLike string) int {
 }
 
 func Like(listeLike string, userID string) bool {
-	var Liker = strings.Split(listeLike, " ")
+	var Liker = strings.Split(listeLike, "#")
 	for _, b := range Liker {
 		if b == userID {
 			return true

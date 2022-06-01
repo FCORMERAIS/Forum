@@ -65,6 +65,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 					passwordHash, err := HashPassword(passwordRegister)
 					if err != nil {
 						fmt.Println(err)
+						error404(w, r)
 					}
 					data = SignUp(emailRegister, usernameRegister, passwordHash)
 					cookie := &http.Cookie{
@@ -80,14 +81,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 			} else if usernameRegister == "" || passwordConnect == "" || emailRegister == "" || passwordRegister == "" || EmailConnect == "" { // l'utilisateur essaye de se déconnecté
 				data.Username = "Invité"
 			} else { // sinon il y a un roblème on affiche la page ERROR 404
-				t, err := template.ParseFiles("../templates/error404.html")
-				if err != nil {
-					fmt.Println(err)
-				}
-				err2 := t.Execute(w, data)
-				if err2 != nil {
-					fmt.Println(err2)
-				}
+				error404(w, r)
 			}
 		}
 	} else {
@@ -97,10 +91,12 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 		t, err := template.ParseFiles("../templates/server.html", "../templates/header.html")
 		if err != nil {
 			fmt.Println(err)
+			error404(w, r)
 		}
 		err2 := t.Execute(w, data)
 		if err2 != nil {
 			fmt.Println(err2)
+			error404(w, r)
 		}
 	} else {
 		http.ServeFile(w, r, path)
@@ -133,15 +129,22 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			SendPostinDB(r.FormValue("Message_Value"), data.Id)
 		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" {
 			if !Like(GetPostDisike(r.FormValue("Dislike")), data.Id) {
+				deleteUserLike(data.Id, r.FormValue("Dislike"))
 				addUserDislike(data.Id, r.FormValue("Dislike"))
+			} else {
+				deleteUserLike(data.Id, r.FormValue("Dislike"))
+				deleteUserDislike(data.Id, r.FormValue("Dislike"))
 			}
-			// } else {
-			// 	deleteUserLike(data.Id, r.FormValue("Dislike"))
-			// }
 		} else if r.FormValue("Like") != "" && data.Username != "Invité" {
 			if !Like(GetPostLike(r.FormValue("Like")), data.Id) {
+				deleteUserDislike(data.Id, r.FormValue("Like"))
 				addUserLike(data.Id, r.FormValue("Like"))
+			} else {
+				deleteUserDislike(data.Id, r.FormValue("Like"))
+				deleteUserLike(data.Id, r.FormValue("Like"))
 			}
+		} else {
+			error404(w, r)
 		}
 	}
 	t, err := template.ParseFiles("../templates/Forum.html")
@@ -153,5 +156,14 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	err2 := t.Execute(w, Page)
 	if err2 != nil {
 		fmt.Println(err2)
+		error404(w, r)
 	}
+}
+
+func error404(w http.ResponseWriter, r *http.Request) { // fonction qui affiche la page de l'erreur 404
+	tmpl, err := template.ParseFiles("./templates/error404.html") // utilisation du fichier error pour le template
+	if err != nil {
+		fmt.Println(err)
+	}
+	tmpl.ExecuteTemplate(w, "error404", nil) // exécute le template sur la page html
 }
