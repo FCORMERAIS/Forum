@@ -65,27 +65,29 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', async f
 fetch("http://127.0.0.1:5555/Post")
 .then(response => response.json())
 .then(function (donnee) {
-    donnee.forEach(element => {
-        const posts = document.getElementById("InterfacePost")
-        posts.innerHTML += `
-        <div class="Post">
-            <div class="Interface_User">
-                <img src="https://pic.onlinewebfonts.com/svg/img_329115.png" class="profile_Post" width="35" height="35">
-                <p class="UserName">${element.Username}</p>
+    if (donnee != null) {
+        donnee.forEach(element => {
+            const posts = document.getElementById("InterfacePost")
+            posts.innerHTML += `
+            <div class="Post">
+                <div class="Interface_User">
+                    <img src="https://pic.onlinewebfonts.com/svg/img_329115.png" class="profile_Post" width="35" height="35">
+                    <p class="UserName">${element.Username}</p>
+                </div>
+                <p class="Message">${element.TextPost}</p>
+                <form class="LikePost" method="POST">
+                    <input type="hidden" name="Like" value="${element.IdPost}">
+                    <button class="ButtonLD" type="submit">&#x1F44D; ${element.LikePost}</button>
+                </form>
+                <form class="DislikePost" method="POST">
+                    <input type="hidden" name="Dislike" value="${element.IdPost}">
+                    <button class="ButtonLD" type="submit">&#128078;${element.DislikePost}</button>
+                </form>
             </div>
-            <p class="Message">${element.TextPost}</p>
-            <form class="LikePost" method="POST">
-                <input type="hidden" name="Like" value="${element.IdPost}">
-                <button class="ButtonLD" type="submit">&#x1F44D; ${element.LikePost}</button>
-            </form>
-            <form class="DislikePost" method="POST">
-                <input type="hidden" name="Dislike" value="${element.IdPost}">
-                <button class="ButtonLD" type="submit">&#128078;${element.DislikePost}</button>
-            </form>
-        </div>
-        `
-        document.body.appendChild(posts)
-    });
+            `
+            document.body.appendChild(posts)
+        });
+    }
 })
 
 

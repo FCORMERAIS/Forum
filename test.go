@@ -16,11 +16,11 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	result, err := db.Prepare("INSERT INTO Categorie (Name, ID_Categorie) VALUES (?,?)") // A CHANGER
+	result, err := db.Prepare("INSERT INTO Categorie (Name, ID_Categorie, Color) VALUES (?,?,?)") // A CHANGER
 	if err != nil {
 		fmt.Println(err)
 	}
-	_, err2 := result.Exec("Joyeux", Id)
+	_, err2 := result.Exec("Divers", Id, "#0a79d4")
 	if err2 != nil {
 		fmt.Println(err2)
 	}
