@@ -31,7 +31,7 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', async f
         <form class="CP_form" method="POST" id="form_next" name="test">
             <input class="CP_Message" type="hidden" id="MessageValue" name="Message_Value">
             <p class="CP_Message" id="Value_Message"></p>
-            <select name="Categorie" id="categorie" class="Categories_CP">
+            <select name="Categorie" id="categorie" class="Categories_CP" required>
             ${options}
             </select>
             <input class="CP_Send" type="submit" value="&#10145" id="publishPost">
