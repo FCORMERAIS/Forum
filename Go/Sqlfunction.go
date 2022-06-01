@@ -357,18 +357,18 @@ func GetPostDisike(uuidPost string) string {
 	return dislikestr
 }
 
-func addCommentary(IdPost string, text string) {
+func addCommentary(IdPost string, text string, IDUser string) {
 	var err error
 	IdCommentary := uuid.Must(uuid.NewV4(), err)
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println(err)
 	}
-	statement, err2 := db.Prepare("INSERT INTO Commentaire (ID_Commentaire, Text_Commentaire, Post_ID) VALUES (?,?, ?)")
+	statement, err2 := db.Prepare("INSERT INTO Commentaire (ID_Commentaire, Text_Commentaire, Post_ID,Username) VALUES (?,?, ?,?)")
 	if err2 != nil {
 		fmt.Println(err2)
 	}
-	statement.Exec(IdCommentary, text, IdPost)
+	statement.Exec(IdCommentary, text, IdPost, IDUser)
 	db.Close()
 }
 
@@ -388,7 +388,12 @@ func GetCommmentary(idPost string) []Commentary {
 	}
 	for result.Next() {
 		var Commentary Commentary
-		result.Scan(&Commentary.IdCommentary, &Commentary.Text, &Commentary.IdPost)
+		var like string
+		var dislike string
+		result.Scan(&Commentary.IdCommentary, &Commentary.Text, &Commentary.IdPost, &dislike, &like, &Commentary.Username)
+		Commentary.Dislike = KnowLike(dislike)
+		Commentary.Like = KnowLike(like)
+		Commentary.Username = GetUsernameByID(Commentary.Username)
 		ListCommentary = append(ListCommentary, Commentary)
 	}
 	db.Close()

@@ -144,7 +144,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 				deleteUserLike(data.Id, r.FormValue("Like"))
 			}
 		} else if r.FormValue("idPost") != "" && data.Username != "Invité" && r.FormValue("textCommentary") != "" {
-			addCommentary(r.FormValue("idPost"), r.FormValue("textCommentary"))
+			addCommentary(r.FormValue("idPost"), r.FormValue("textCommentary"), data.Id)
 		} else {
 			error404(w, r)
 		}

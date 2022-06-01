@@ -72,17 +72,22 @@ fetch("http://127.0.0.1:5555/Post")
                     <button class="ButtonLD" type="submit">&#128078;${element.DislikePost}</button>
                 </form>
             </div>
-            <form class="DislikePost" method="POST">
+            <form class="commentary" method="POST">
                 <input type="hidden" name="idPost" value="${element.IdPost}">
                 <input type="text" name="textCommentary"> 
             </form>
-            <div class="commentary">
+            <div class="commentary" id="commentary">
             </div>
         </div>
         `
-        // element.Commentary.forEach(element => {
-        //     console.log("hello")
-        // });
+        element.CommentaryPost.forEach(commentary => {
+            const comm = document.getElementById("commentary")
+            const comment = document.createElement("div")
+            comment.innerHTML =`
+            <p>${commentary.Username} : ${commentary.Text}</p>
+            `
+            comm.appendChild(comment)
+        });
         document.body.appendChild(posts)
     });
 })
