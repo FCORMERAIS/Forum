@@ -69,7 +69,7 @@ fetch("http://127.0.0.1:5555/Post")
         donnee.forEach(element => {
             const posts = document.getElementById("InterfacePost")
             posts.innerHTML += `
-            <div class="Post">
+            <div class="Post" id="${element.IdPost}">
                 <div class="Interface_User">
                     <img src="https://pic.onlinewebfonts.com/svg/img_329115.png" class="profile_Post" width="35" height="35">
                     <p class="UserName">${element.Username}</p>
@@ -80,17 +80,22 @@ fetch("http://127.0.0.1:5555/Post")
                     <button class="ButtonLD" type="submit">&#x1F44D; ${element.LikePost}</button>
                 </form>
                 <form class="DislikePost" method="POST">
-                    <input type="hidden" name="Dislike" value="${element.IdPost}">
+                    <input type="hidden" name="Dislike" value="${element.IdPost}">  
                     <button class="ButtonLD" type="submit">&#128078;${element.DislikePost}</button>
                 </form>
             </div>
             `
             document.body.appendChild(posts)
+            document.getElementById(element.IdPost).style.backgroundColor = element.CategorieColor;
+            
         });
     }
 })
 
-
-
-
-//<option value=> </option></option>
+fetch("http://127.0.0.1:5555/JsonCategories")
+.then(response => response.json())
+.then( function (categories) {
+    categories.forEach(categorie => {
+        document.getElementById(`ButonCategorie${categorie.Name}`).style.backgroundColor = categorie.Color;
+    });
+});

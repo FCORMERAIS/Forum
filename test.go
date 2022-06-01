@@ -16,13 +16,16 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	result, err := db.Prepare("INSERT INTO Categorie (Name, ID_Categorie, Color) VALUES (?,?,?)") // A CHANGER
+	result3, err := db.Prepare("INSERT INTO Categorie (Name, ID_Categorie, Color) VALUES (?,?,?)") // A CHANGER
 	if err != nil {
 		fmt.Println(err)
 	}
-	_, err2 := result.Exec("Divers", Id, "#0a79d4")
-	if err2 != nil {
-		fmt.Println(err2)
+	_, err4 := result3.Exec("Monde", Id, "c2880bf8")
+	if err4 != nil {
+		fmt.Println(err4)
 	}
 	db.Close()
+
 }
+
+//background-color: #0a79d4;

@@ -99,7 +99,7 @@ func GetPostDB() []Post {
 		fmt.Println("Erreur ouverture :")
 		fmt.Println(err)
 	}
-	resulttest, err := db.Query("SELECT ID_Post, ID_User_Post, Text_Post, Like, Dislike FROM Post")
+	resulttest, err := db.Query("SELECT ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post, Like, Dislike FROM Post")
 	if err != nil {
 		fmt.Println("Erreur de recherche :")
 		fmt.Println(err)
@@ -112,21 +112,35 @@ func GetPostDB() []Post {
 	var numberLike int
 	var numberDislike int
 	var IdUser string
+	var ID_Categorie string
+	var CategorieColor string
+	var CategorieName string
 	var singlePost Post
 	for resulttest.Next() {
 		Like = ""
 		Dislike = ""
-		resulttest.Scan(&id_post, &IdUser, &Text_Post, &Like, &Dislike)
+		resulttest.Scan(&id_post, &IdUser, &ID_Categorie, &Text_Post, &Like, &Dislike)
 		fmt.Println(Like, id_post)
 		Username = GetUsernameByID(IdUser)
 		numberLike = KnowLike(Like)
 		numberDislike = KnowLike(Dislike)
+		resultCategorie, err := db.Prepare("SELECT Name, Color FROM Categorie WHERE ID_Categorie = ?")
+		result, err := resultCategorie.Query(ID_Categorie)
+		if err != nil {
+			fmt.Println("Erreur de recherche :")
+			fmt.Println(err)
+		}
+		for result.Next() {
+			result.Scan(&CategorieName, &CategorieColor)
+		}
 		singlePost = Post{
-			Username:    Username,
-			TextPost:    Text_Post,
-			LikePost:    numberLike,
-			DislikePost: numberDislike,
-			IdPost:      id_post,
+			Username:       Username,
+			TextPost:       Text_Post,
+			LikePost:       numberLike,
+			DislikePost:    numberDislike,
+			IdPost:         id_post,
+			CategorieColor: CategorieColor,
+			CategorieName:  CategorieName,
 		}
 		postList = append(postList, singlePost)
 	}
@@ -169,16 +183,17 @@ func GetAllCategories() []Categorie {
 		fmt.Println(err)
 	}
 	defer db.Close()
-	tableCategorie, err2 := db.Query("SELECT Name FROM Categorie")
+	tableCategorie, err2 := db.Query("SELECT Name, Color FROM Categorie")
 	if err2 != nil {
 		fmt.Println(err2)
 	}
 	var url string
 	var name string
+	var color string
 	for tableCategorie.Next() {
-		tableCategorie.Scan(&name)
+		tableCategorie.Scan(&name, &color)
 		url = "/Forum#" + name
-		categories = append(categories, Categorie{URL: url, Name: name})
+		categories = append(categories, Categorie{URL: url, Name: name, Color: color})
 	}
 	return categories
 }

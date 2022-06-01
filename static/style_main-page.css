@@ -85,9 +85,15 @@ body{
 
 .interface_categories {
     position: relative;
-    top: 10%;
+    top: 12%;
+    overflow-y: scroll;
+    scrollbar-width: auto;
+    height: 30%;
 }
 
+.button_categories {
+    margin: 1em;
+}
 
 .triangle{
     border-left: 210px solid transparent;

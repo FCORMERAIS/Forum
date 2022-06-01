@@ -6,16 +6,19 @@ type User struct {
 }
 
 type Post struct {
-	Username    string
-	TextPost    string
-	LikePost    int
-	DislikePost int
-	IdPost      string
+	Username       string
+	TextPost       string
+	LikePost       int
+	DislikePost    int
+	IdPost         string
+	CategorieColor string
+	CategorieName  string
 }
 
 type Categorie struct {
-	URL  string
-	Name string
+	URL   string
+	Name  string
+	Color string
 }
 
 type ForumPage struct {
