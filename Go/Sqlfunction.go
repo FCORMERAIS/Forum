@@ -391,6 +391,7 @@ func GetCommmentary(idPost string) []Commentary {
 		var like string
 		var dislike string
 		result.Scan(&Commentary.IdCommentary, &Commentary.Text, &Commentary.IdPost, &dislike, &like, &Commentary.Username)
+		fmt.Println(dislike)
 		Commentary.Dislike = KnowLike(dislike)
 		Commentary.Like = KnowLike(like)
 		Commentary.Username = GetUsernameByID(Commentary.Username)
