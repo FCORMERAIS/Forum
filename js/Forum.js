@@ -117,7 +117,6 @@ fetch("http://127.0.0.1:5555/Post")
         }
         document.body.appendChild(posts)
         document.getElementById(element.IdPost).style.backgroundColor = element.CategorieColor;
-            
         });
     }
 })
