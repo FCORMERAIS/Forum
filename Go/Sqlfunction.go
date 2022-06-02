@@ -701,6 +701,7 @@ func DeletePost(ID_Post string) {
 	db.Close()
 }
 
+//fonction permettant de créer une catégorie d'une base de données
 func AddCategorie(Name string, color string) {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {

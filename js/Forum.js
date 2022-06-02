@@ -133,7 +133,7 @@ fetch("http://127.0.0.1:5555/Post") // on avs chercher tout les posts a afficher
     }
 })
 
-fetch("http://127.0.0.1:5555/JsonCategories") // Permet de recuperer toutes les categories disponibles pour les afficher en bas a droite en forme de bouton avec eur couleur respective
+fetch("http://127.0.0.1:5555/JsonCategories") // Permet de recuperer toutes les categories disponibles pour les afficher en bas a gauche en forme de bouton avec leur couleur respective
 .then(response => response.json())
 .then( function (categories) {
     categories.forEach(categorie => {
