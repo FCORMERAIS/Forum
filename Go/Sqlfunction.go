@@ -79,8 +79,7 @@ func GetUsernameByID(UUID string) string {
 	return Username
 }
 
-//fonction permettant de rajouter un post dans la base de données
-func SendPostinDB(message string, Id_User string) {
+func SendPostinDB(message string, Id_User string, categorie string) {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture du fichier :")
@@ -88,7 +87,7 @@ func SendPostinDB(message string, Id_User string) {
 	}
 	statement, err := db.Prepare("INSERT INTO Post (ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post) VALUES (?,?,?,?)")
 	var eRR error
-	_, err2 := statement.Exec(uuid.Must(uuid.NewV4(), eRR), Id_User, uuid.Must(uuid.NewV4(), eRR), message)
+	_, err2 := statement.Exec(uuid.Must(uuid.NewV4(), eRR), Id_User, categorie, message)
 	if err != nil || err2 != nil {
 		fmt.Println("Erreur d'insertion :")
 		fmt.Println(err)
@@ -97,27 +96,75 @@ func SendPostinDB(message string, Id_User string) {
 	db.Close()
 }
 
-//Fonction permettant de recuperer tout les posts de la base de données
-func GetPostDB() []Post {
+func GetPostDB(filter string) []Post {
 	var postList []Post
+	var resultPost *sql.Rows
+	var ID_Categorie_Filtre string
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture :")
 		fmt.Println(err)
 	}
-	resulttest, err := db.Query("SELECT ID_Post, ID_User_Post, Text_Post, Like, Dislike FROM Post")
+	if filter == "" {
+		resultPost, err = db.Query("SELECT ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post, Like, Dislike FROM Post")
+	} else {
+		prepareforRecupID_Categorie, err2 := db.Prepare("SELECT ID_Categorie FROM Categorie WHERE Name = ?")
+		resulte_ID, err := prepareforRecupID_Categorie.Query(filter)
+		if err != nil || err2 != nil {
+			fmt.Println("Erreur de recherche :")
+			fmt.Println(err)
+			fmt.Println(err2)
+		}
+		for resulte_ID.Next() {
+			resulte_ID.Scan(&ID_Categorie_Filtre)
+			prepare, _ := db.Prepare("SELECT ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post, Like, Dislike FROM Post WHERE ID_Catégorie_Post = ?")
+			resultPost, err = prepare.Query(ID_Categorie_Filtre)
+		}
+
+	}
+
 	if err != nil {
 		fmt.Println("Erreur de recherche :")
 		fmt.Println(err)
 	}
-	for resulttest.Next() {
-		var singlePost Post
-		var Like, Dislike, IdUser string
-		resulttest.Scan(&singlePost.IdPost, &IdUser, &singlePost.TextPost, &Like, &Dislike)
-		singlePost.Username = GetUsernameByID(IdUser)
-		singlePost.LikePost = KnowLike(Like)
-		singlePost.DislikePost = KnowLike(Dislike)
-		singlePost.CommentaryPost = GetCommmentary(singlePost.IdPost)
+	var Username string
+	var Text_Post string
+	var id_post string
+	var Like string
+	var Dislike string
+	var numberLike int
+	var numberDislike int
+	var IdUser string
+	var ID_Categorie string
+	var CategorieColor string
+	var CategorieName string
+	var singlePost Post
+	for resultPost.Next() {
+		Like = ""
+		Dislike = ""
+		resultPost.Scan(&id_post, &IdUser, &ID_Categorie, &Text_Post, &Like, &Dislike)
+		fmt.Println(Like, id_post)
+		Username = GetUsernameByID(IdUser)
+		numberLike = KnowLike(Like)
+		numberDislike = KnowLike(Dislike)
+		resultCategorie, err := db.Prepare("SELECT Name, Color FROM Categorie WHERE ID_Categorie = ?")
+		result, err := resultCategorie.Query(ID_Categorie)
+		if err != nil {
+			fmt.Println("Erreur de recherche :")
+			fmt.Println(err)
+		}
+		for result.Next() {
+			result.Scan(&CategorieName, &CategorieColor)
+		}
+		singlePost = Post{
+			Username:       Username,
+			TextPost:       Text_Post,
+			LikePost:       numberLike,
+			DislikePost:    numberDislike,
+			IdPost:         id_post,
+			CategorieColor: CategorieColor,
+			CategorieName:  CategorieName,
+		}
 		postList = append(postList, singlePost)
 	}
 	db.Close()
@@ -156,16 +203,17 @@ func GetAllCategories() []Categorie {
 		fmt.Println(err)
 	}
 	defer db.Close()
-	tableCategorie, err2 := db.Query("SELECT Name FROM Categorie")
+	tableCategorie, err2 := db.Query("SELECT Name, Color FROM Categorie")
 	if err2 != nil {
 		fmt.Println(err2)
 	}
 	var url string
 	var name string
+	var color string
 	for tableCategorie.Next() {
-		tableCategorie.Scan(&name)
+		tableCategorie.Scan(&name, &color)
 		url = "/Forum#" + name
-		categories = append(categories, Categorie{URL: url, Name: name})
+		categories = append(categories, Categorie{URL: url, Name: name, Color: color})
 	}
 	return categories
 }
@@ -518,4 +566,26 @@ func GetCommmentary(idPost string) []Commentary {
 	}
 	db.Close()
 	return ListCommentary
+}
+
+func GetIdCategorie(categorieName string) string {
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement, err2 := db.Prepare("SELECT ID_Categorie FROM Categorie WHERE Name = ?")
+	if err2 != nil {
+		fmt.Println("Erreur ouverture du fichier : ", err2)
+	}
+	result, err3 := statement.Query(categorieName)
+	if err3 != nil {
+		fmt.Println("Erreur ouverture du fichier : ", err3)
+	}
+	db.Close()
+	var IdCategorie string
+	for result.Next() {
+		result.Scan(&IdCategorie)
+	}
+	return IdCategorie
+
 }

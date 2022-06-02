@@ -12,11 +12,14 @@ type Post struct {
 	DislikePost    int
 	IdPost         string
 	CommentaryPost []Commentary
+	CategorieColor string
+	CategorieName  string
 }
 
 type Categorie struct {
-	URL  string
-	Name string
+	URL   string
+	Name  string
+	Color string
 }
 
 type ForumPage struct {

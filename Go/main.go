@@ -11,6 +11,7 @@ import (
 )
 
 var Port = "127.0.0.1:5555"
+var filter string = ""
 
 func main() {
 	fileserver := http.FileServer(http.Dir("static"))
@@ -19,13 +20,19 @@ func main() {
 	http.HandleFunc("/Acceuil", Acceuil)
 	http.HandleFunc("/Forum", Forum)
 	http.HandleFunc("/Post", GetJson)
+	http.HandleFunc("/JsonCategories", GetCategories)
 	fmt.Println("Serving @ : ", "http://"+Port+"/Acceuil")
 	log.Fatal(http.ListenAndServe(Port, nil))
 }
 
+func GetCategories(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(GetAllCategories())
+}
+
 func GetJson(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(GetPostDB())
+	json.NewEncoder(w).Encode(GetPostDB(filter))
 }
 
 func testPath(w http.ResponseWriter, r *http.Request) {
@@ -37,6 +44,7 @@ func testPath(w http.ResponseWriter, r *http.Request) {
 }
 
 func Acceuil(w http.ResponseWriter, r *http.Request) {
+	filter = ""
 	path := r.URL.Path
 	fmt.Println(path)
 	var data User
@@ -129,10 +137,10 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	} else {
 		data.Username = "Invité"
 	}
-	if r.Method == "POST" { // si l'utilisateur envois un POST
-		if r.FormValue("Message_Value") != "" && data.Username != "Invité" { // on vérifie si il s connécté ou si cest le cas l'utilisateur poste un message
-			SendPostinDB(r.FormValue("Message_Value"), data.Id)
-		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" { // si l'utilisateur rentre ici c'est qu'il essaye de disliker un post et qu'il ne la pas déja disliker
+	if r.Method == "POST" {
+		if r.FormValue("Message_Value") != "" && data.Username != "Invité" {
+			SendPostinDB(r.FormValue("Message_Value"), data.Id, GetIdCategorie(r.FormValue("Categorie")))
+		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" {
 			if !Like(GetPostDisike(r.FormValue("Dislike")), data.Id) {
 				deleteUserLikePost(data.Id, r.FormValue("Dislike"))
 				addUserDislikePost(data.Id, r.FormValue("Dislike"))
@@ -166,6 +174,8 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 				deleteUserDislikeComment(data.Id, r.FormValue("DislikeComm"))
 				deleteUserLikeComment(data.Id, r.FormValue("DislikeComm"))
 			}
+		} else if r.FormValue("categorieForm") != "" {
+			filter = r.FormValue("categorieForm")
 		} else { // sinon il y a une erreur et lance l'erreur 404
 			error500(w, r)
 		}

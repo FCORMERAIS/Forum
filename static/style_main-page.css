@@ -85,21 +85,27 @@ body{
 
 .interface_categories {
     position: relative;
-    top: 10%;
+    top: 12%;
+    overflow-y: scroll;
+    scrollbar-width: auto;
+    height: 30%;
 }
 
+.button_categories {
+    margin: 1em;
+}
 
 .triangle{
     border-left: 210px solid transparent;
     border-bottom: 270px solid #606060;
-    position: absolute;
+    position: fixed;
     top: 71%;
     left: 89%;
     z-index: 2;
 }
 
 .interface_create_post{
-    position: absolute;
+    position: fixed;
     width: 30%;
     height: 45%;
     bottom: 0%;
@@ -121,21 +127,20 @@ body{
 }
 
 .CP_form{
-    width: 80%;
-    height: 60%;
-    background-color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .CP_Message{
     width: 80%;
     height: 60%;
-    vertical-align: text-top;
-}
-
-.CP_Message_next{
-    width: 100%;
-    height: 100%;
-    vertical-align: text-top;
+    text-align: center;
+    background-color: white;
+    top: 10%;
+    position: absolute;
 }
 
 .CP_Send{
@@ -146,6 +151,13 @@ body{
     background-color: transparent;
     border: transparent;
     color: white;
+}
+
+.Categories_CP{
+    bottom: 16%;
+    position: absolute;
+    width: 80%;
+    height: 8%;
 }
 
 .button{
@@ -245,7 +257,7 @@ body{
 }
 
 .interface_create_post_Next{
-    position: absolute;
+    position: fixed;
     width: 30%;
     height: 45%;
     bottom: 0%;

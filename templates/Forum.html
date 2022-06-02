@@ -52,8 +52,8 @@
         <input class="search_categorie" type="text" placeholder="Rechercher"> 
         <div class="interface_categories">
             {{ range .ListCategories }}
-            <form action={{.URL}}>
-                <input class="categorie" type="submit" value={{.Name}} />
+            <form method="post" class="button_categories">
+                <input name="categorieForm" class="categorie" type="submit" id="ButonCategorie{{.Name}}" value={{.Name}} />
             </form>
             {{end}}
         </div>
