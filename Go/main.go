@@ -11,6 +11,7 @@ import (
 )
 
 var Port = "127.0.0.1:5555"
+var filter string = ""
 
 func main() {
 	fileserver := http.FileServer(http.Dir("static"))
@@ -25,10 +26,11 @@ func main() {
 
 func GetJson(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(GetPostDB())
+	json.NewEncoder(w).Encode(GetPostDB(filter))
 }
 
 func Acceuil(w http.ResponseWriter, r *http.Request) {
+	filter = ""
 	path := r.URL.Path
 	fmt.Println(path)
 	var data User
@@ -143,6 +145,8 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			if !Like(GetPostLike(r.FormValue("Like")), data.Id) {
 				addUserLike(data.Id, r.FormValue("Like"))
 			}
+		} else if r.FormValue("categorieForm") != "" {
+			filter = r.FormValue("categorieForm")
 		}
 	}
 	t, err := template.ParseFiles("../templates/Forum.html")

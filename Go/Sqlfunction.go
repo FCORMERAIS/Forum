@@ -92,14 +92,33 @@ func SendPostinDB(message string, Id_User string, categorie string) {
 	db.Close()
 }
 
-func GetPostDB() []Post {
+func GetPostDB(filter string) []Post {
 	var postList []Post
+	var resultPost *sql.Rows
+	var ID_Categorie_Filtre string
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
 		fmt.Println("Erreur ouverture :")
 		fmt.Println(err)
 	}
-	resulttest, err := db.Query("SELECT ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post, Like, Dislike FROM Post")
+	if filter == "" {
+		resultPost, err = db.Query("SELECT ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post, Like, Dislike FROM Post")
+	} else {
+		prepareforRecupID_Categorie, err2 := db.Prepare("SELECT ID_Categorie FROM Categorie WHERE Name = ?")
+		resulte_ID, err := prepareforRecupID_Categorie.Query(filter)
+		if err != nil || err2 != nil {
+			fmt.Println("Erreur de recherche :")
+			fmt.Println(err)
+			fmt.Println(err2)
+		}
+		for resulte_ID.Next() {
+			resulte_ID.Scan(&ID_Categorie_Filtre)
+			prepare, _ := db.Prepare("SELECT ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post, Like, Dislike FROM Post WHERE ID_Catégorie_Post = ?")
+			resultPost, err = prepare.Query(ID_Categorie_Filtre)
+		}
+
+	}
+
 	if err != nil {
 		fmt.Println("Erreur de recherche :")
 		fmt.Println(err)
@@ -116,10 +135,10 @@ func GetPostDB() []Post {
 	var CategorieColor string
 	var CategorieName string
 	var singlePost Post
-	for resulttest.Next() {
+	for resultPost.Next() {
 		Like = ""
 		Dislike = ""
-		resulttest.Scan(&id_post, &IdUser, &ID_Categorie, &Text_Post, &Like, &Dislike)
+		resultPost.Scan(&id_post, &IdUser, &ID_Categorie, &Text_Post, &Like, &Dislike)
 		fmt.Println(Like, id_post)
 		Username = GetUsernameByID(IdUser)
 		numberLike = KnowLike(Like)
