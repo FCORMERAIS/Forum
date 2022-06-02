@@ -10,9 +10,22 @@
 <body>
     <div class="header" id="header">
         <h1 style="margin-right: 40%;">{{.User.Username}}</h1>
-        <form action="/Acceuil">
-            <input class ="button" type="submit" value="retourner a la page de connexion" />
-        </form>
+        <div class="headerbutton">
+            <form method="POST">
+                <input class ="button" type="submit" value="voir ses Posts" >
+                <input type="hidden" name="SeeOurPost" value={{.User.Id}}>
+            </form>
+            <form method="POST">
+                <input class ="button" type="submit" value="Voir les Posts liker" >
+                <input type="hidden" name="SeePostLike" value={{.User.Id}}>
+            </form>
+            <form method="POST">
+                <input class ="button" type="submit" value="Voir tous les posts" >
+                <input type="hidden" name="SeeAllPost" value={{.User.Id}}>
+            </form>
+            <form action="/Acceuil">
+                <input class ="button" type="submit" value="retourner a la page de connexion" />
+            </form>
         </div>
     </div>
     <div class="barreLeft">

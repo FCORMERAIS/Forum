@@ -280,10 +280,13 @@ body{
     overflow-y: hidden;
     overflow-x: scroll;
 }   
-
+.headerbutton{
+    display:flex;
+    justify-content: center;
+    margin-left : 16%
+}
 .Post{
-    margin: 5%;
-    background-color: #0a79d4;
+    margin:0 5% 5% 5%;
     border-radius: 5px / 5px;
     padding: 1em 1em 1em 1em;
 }

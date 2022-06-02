@@ -12,6 +12,8 @@ import (
 
 var Port = "127.0.0.1:5555"
 var filter string = ""
+var UserPost []Post
+var UserLikePost []Post
 
 func main() {
 	fileserver := http.FileServer(http.Dir("static"))
@@ -32,11 +34,17 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 
 func GetJson(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(GetPostDB(filter))
+	if UserPost != nil {
+		json.NewEncoder(w).Encode(UserPost)
+	} else if UserLikePost != nil {
+		json.NewEncoder(w).Encode(UserLikePost)
+	} else {
+		json.NewEncoder(w).Encode(GetPostDB(filter))
+	}
 }
 
 func testPath(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/js/Forum.js" || r.URL.Path == "/js/index.js" || r.URL.Path == "/static/style_main-page.css" || r.URL.Path == "/static/style.css" {
+	if r.URL.Path == "/js/Forum.js" || r.URL.Path == "/js/index.js" || r.URL.Path == "/static/style_main-page.css" || r.URL.Path == "/static/style.css" || r.URL.Path == "/images/Background.png" {
 		http.ServeFile(w, r, ".."+r.URL.Path)
 	} else {
 		error404(w, r)
@@ -71,7 +79,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 						}
 						data = connected(EmailConnect)
 						cookie.Value = data.Id
-						cookie.MaxAge = 300
+						cookie.MaxAge = 3600 * 24
 						http.SetCookie(w, cookie)
 					}
 				} else {
@@ -89,7 +97,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 						Name: "UserSessionId",
 					}
 					cookie.Value = data.Id
-					cookie.MaxAge = 300
+					cookie.MaxAge = 3600 * 24
 					http.SetCookie(w, cookie)
 				} else {
 					data.Username = "Invité"
@@ -117,6 +125,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 }
 
 func Forum(w http.ResponseWriter, r *http.Request) {
+	var ERROR bool = false
 	var Categories = GetAllCategories()
 	var Page ForumPage
 	fmt.Println(r.URL.Path)
@@ -174,22 +183,34 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 				deleteUserDislikeComment(data.Id, r.FormValue("DislikeComm"))
 				deleteUserLikeComment(data.Id, r.FormValue("DislikeComm"))
 			}
+		} else if r.FormValue("SeeAllPost") != "" {
+			UserPost = nil
+			UserLikePost = nil
+			filter = ""
 		} else if r.FormValue("categorieForm") != "" {
 			filter = r.FormValue("categorieForm")
-		} else { // sinon il y a une erreur et lance l'erreur 404
+		} else if r.FormValue("SeeOurPost") != "" {
+			UserPost = GetUserPost(r.FormValue("SeeOurPost"))
+		} else if r.FormValue("SeePostLike") != "" {
+			// UserLikePost = GetUserPostLike(r.FormValue("SeePostLike"))
+		} else { // sinon il y a une erreur et lance l'erreur 500
 			error500(w, r)
+			ERROR = true
 		}
 	}
-	t, err := template.ParseFiles("../templates/Forum.html") // on charge la templates du Forum
-	if err != nil {
-		fmt.Println(err)
-	}
-	Page.User = data
-	Page.ListCategories = Categories
-	err2 := t.Execute(w, Page) // on l'éxecute
-	if err2 != nil {
-		fmt.Println(err2)
-		error500(w, r)
+	fmt.Println("POST : ", r.FormValue("SeeOurPost"))
+	if !ERROR {
+		t, err := template.ParseFiles("../templates/Forum.html") // on charge la templates du Forum
+		if err != nil {
+			fmt.Println(err)
+		}
+		Page.User = data
+		Page.ListCategories = Categories
+		err2 := t.Execute(w, Page) // on l'éxecute
+		if err2 != nil {
+			fmt.Println(err2)
+			error500(w, r)
+		}
 	}
 }
 
@@ -206,6 +227,5 @@ func error500(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Fprintf(w, "hello")
 	tmpl.Execute(w, nil) // exécute le template sur la page html
 }
