@@ -634,3 +634,38 @@ func GetUserPost(userID string) []Post {
 	}
 	return ListPost
 }
+
+func GetUserPostLike(userID string) []Post {
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	statement, err2 := db.Prepare("SELECT ID_User_Post,ID_Post,Text_Post,ID_Catégorie_Post, Like, Dislike FROM Post")
+	if err2 != nil {
+		fmt.Println("Erreur ouverture du fichier : ", err2)
+	}
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+	result, err3 := statement.Query()
+	if err3 != nil {
+		fmt.Println(err3)
+	}
+	var ListPost []Post
+	for result.Next() {
+		var singlePost Post
+		var Likestr string
+		var Dislike string
+		var IdCategorie string
+		result.Scan(&singlePost.Username, &singlePost.IdPost, &singlePost.TextPost, &IdCategorie, &Likestr, &Dislike)
+		if Like(Likestr, userID) {
+			singlePost.LikePost = KnowLike(Likestr)
+			singlePost.DislikePost = KnowLike(Dislike)
+			singlePost.Username = GetUsernameByID(singlePost.Username)
+			singlePost.CommentaryPost = GetCommmentary(singlePost.IdPost)
+			singlePost.CategorieColor = GetColorCategoryById(IdCategorie)
+			ListPost = append(ListPost, singlePost)
+		}
+	}
+	return ListPost
+}

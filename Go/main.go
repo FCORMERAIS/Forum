@@ -192,7 +192,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 		} else if r.FormValue("SeeOurPost") != "" {
 			UserPost = GetUserPost(r.FormValue("SeeOurPost"))
 		} else if r.FormValue("SeePostLike") != "" {
-			// UserLikePost = GetUserPostLike(r.FormValue("SeePostLike"))
+			UserLikePost = GetUserPostLike(r.FormValue("SeePostLike"))
 		} else { // sinon il y a une erreur et lance l'erreur 500
 			error500(w, r)
 			ERROR = true
