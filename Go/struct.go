@@ -6,14 +6,15 @@ type User struct {
 }
 
 type Post struct {
-	Username       string
-	TextPost       string
-	LikePost       int
-	DislikePost    int
-	IdPost         string
-	CommentaryPost []Commentary
-	CategorieColor string
-	CategorieName  string
+	Username               string
+	TextPost               string
+	LikePost               int
+	DislikePost            int
+	IdPost                 string
+	CommentaryPost         []Commentary
+	CategorieColor         string
+	CategorieName          string
+	SamePersonWhithSession bool
 }
 
 type Categorie struct {

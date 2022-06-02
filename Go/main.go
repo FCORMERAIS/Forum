@@ -33,6 +33,14 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetJson(w http.ResponseWriter, r *http.Request) {
+	var data User
+	cookie, err := r.Cookie("UserSessionId")
+	if err != nil {
+		data.Username = "Invité"
+		data.Id = ""
+	} else {
+		data.Id = cookie.Value
+	}
 	w.Header().Set("Content-Type", "application/json")
 	if UserPost != nil {
 		json.NewEncoder(w).Encode(UserPost)
@@ -193,6 +201,8 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			UserPost = GetUserPost(r.FormValue("SeeOurPost"))
 		} else if r.FormValue("SeePostLike") != "" {
 			UserLikePost = GetUserPostLike(r.FormValue("SeePostLike"))
+		} else if r.FormValue("delete") != "" {
+			DeletePost(r.FormValue("delete"))
 		} else { // sinon il y a une erreur et lance l'erreur 500
 			error500(w, r)
 			ERROR = true

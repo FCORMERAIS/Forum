@@ -291,9 +291,29 @@ body{
     padding: 1em 1em 1em 1em;
 }
 
+.Post_top{
+    position: relative;
+    height: 6em;
+}
+
+
 .Interface_User {
     display: flex;
+    justify-content: left;
     text-align: center;
+}
+
+.Inteface_Delete {
+    position: absolute;
+    right: 1em;
+    top: 0;
+}
+
+.corbeille{
+    position: relative;
+    background-color: transparent;
+    border: none;
+    font-size: xxX-large;
 }
 
 .profile_Post{
