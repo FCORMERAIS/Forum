@@ -218,7 +218,6 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			ERROR = true
 		}
 	}
-	fmt.Println("POST : ", r.FormValue("SeeOurPost"))
 	if !ERROR {
 		t, err := template.ParseFiles("../templates/Forum.html") // on charge la templates du Forum
 		if err != nil {
