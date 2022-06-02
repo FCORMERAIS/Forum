@@ -47,7 +47,7 @@ func GetJson(w http.ResponseWriter, r *http.Request) {
 	} else if UserLikePost != nil {
 		json.NewEncoder(w).Encode(UserLikePost)
 	} else {
-		json.NewEncoder(w).Encode(GetPostDB(filter))
+		json.NewEncoder(w).Encode(GetPostDB(filter, data.Id))
 	}
 }
 
