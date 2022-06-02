@@ -293,6 +293,19 @@ body{
     text-align: center;
 }
 
+.Inteface_Delete {
+    display: flex;
+    text-align: center;
+    justify-content: right;
+    margin-top: -8em;
+    margin-right: 1em;
+}
+
+.corbeille{
+    position: relative;
+    font-size: xxX-large;
+}
+
 .profile_Post{
     position: relative;
     margin: 1em;

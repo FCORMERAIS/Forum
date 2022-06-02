@@ -96,7 +96,7 @@ func SendPostinDB(message string, Id_User string, categorie string) {
 	db.Close()
 }
 
-func GetPostDB(filter string) []Post {
+func GetPostDB(filter string, UserId string) []Post {
 	var postList []Post
 	var resultPost *sql.Rows
 	var ID_Categorie_Filtre string
@@ -132,6 +132,11 @@ func GetPostDB(filter string) []Post {
 		Like = ""
 		Dislike = ""
 		resultPost.Scan(&singlePost.IdPost, &singlePost.Username, &ID_Categorie, &singlePost.TextPost, &Like, &Dislike)
+		if singlePost.Username == UserId {
+			singlePost.SamePersonWhithSession = true
+		} else {
+			singlePost.SamePersonWhithSession = false
+		}
 		singlePost.Username = GetUsernameByID(singlePost.Username)
 		singlePost.LikePost = KnowLike(Like)
 		singlePost.DislikePost = KnowLike(Dislike)

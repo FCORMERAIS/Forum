@@ -31,12 +31,20 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetJson(w http.ResponseWriter, r *http.Request) {
+	var data User
+	cookie, err := r.Cookie("UserSessionId")
+	if err != nil {
+		data.Username = "Invité"
+		data.Id = ""
+	} else {
+		data.Id = cookie.Value
+	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(GetPostDB(filter))
+	json.NewEncoder(w).Encode(GetPostDB(filter, data.Id))
 }
 
 func testPath(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/js/Forum.js" || r.URL.Path == "/js/index.js" || r.URL.Path == "/static/style_main-page.css" || r.URL.Path == "/static/style.css" {
+	if r.URL.Path == "/js/Forum.js" || r.URL.Path == "/js/index.js" || r.URL.Path == "/static/style_main-page.css" || r.URL.Path == "/static/style.css" || r.URL.Path == "/images/Background.png" {
 		http.ServeFile(w, r, ".."+r.URL.Path)
 	} else {
 		error404(w, r)

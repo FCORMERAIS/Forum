@@ -74,6 +74,9 @@ fetch("http://127.0.0.1:5555/Post")
                     <img src="https://pic.onlinewebfonts.com/svg/img_329115.png" class="profile_Post" width="35" height="35">
                     <p class="UserName">${element.Username}</p>
                 </div>
+                <div id="Delete_${element.IdPost}" >
+
+                </div>
                 <p class="Message">${element.TextPost}</p>
                 <div class=likeDislike style="display:flex">
                     <form class="LikePost" method="POST">
@@ -117,6 +120,12 @@ fetch("http://127.0.0.1:5555/Post")
         }
         document.body.appendChild(posts)
         document.getElementById(element.IdPost).style.backgroundColor = element.CategorieColor;
+        if (element.SamePersonWhithSession) {
+            document.getElementById(`Delete_${element.IdPost}`).classList.add("Inteface_Delete")
+            document.getElementById(`Delete_${element.IdPost}`).innerHTML = `
+                <p class="corbeille">&#128465;</p>
+            `
+        }
         });
     }
 })
