@@ -138,8 +138,6 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 //fonction forum l'utilisateur pourra liker des posts en poster ou bien simplement les regarder si il n'est pas connecter
 func Forum(w http.ResponseWriter, r *http.Request) {
 	var ERROR bool = false
-	var Categories = GetAllCategories()
-	var Page ForumPage
 	fmt.Println(r.URL.Path)
 	cookie, err := r.Cookie("UserSessionId")
 	if err != nil {
@@ -148,7 +146,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			Value: "Invité",
 		}
 	}
-	cookie.MaxAge = 300
+	cookie.MaxAge = 3600 * 24
 	data := User{
 		Id: cookie.Value,
 	}
@@ -227,9 +225,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		Page.User = data
-		Page.ListCategories = Categories
-		err2 := t.Execute(w, Page) // on l'éxecute
+		err2 := t.Execute(w, data) // on l'éxecute
 		if err2 != nil {
 			fmt.Println(err2)
 			error500(w, r)

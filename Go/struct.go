@@ -18,7 +18,6 @@ type Post struct {
 }
 
 type Categorie struct {
-	URL   string
 	Name  string
 	Color string
 }

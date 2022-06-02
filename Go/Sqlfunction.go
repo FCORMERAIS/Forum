@@ -229,13 +229,11 @@ func GetAllCategories() []Categorie {
 	if err2 != nil {
 		fmt.Println(err2)
 	}
-	var url string
 	var name string
 	var color string
 	for tableCategorie.Next() {
 		tableCategorie.Scan(&name, &color)
-		url = "/Forum#" + name
-		categories = append(categories, Categorie{URL: url, Name: name, Color: color})
+		categories = append(categories, Categorie{Name: name, Color: color})
 	}
 	return categories
 }
