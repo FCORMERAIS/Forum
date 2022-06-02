@@ -94,7 +94,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 						http.SetCookie(w, cookie)
 					}
 				} else {
-					fmt.Println("Le mot de passe n'est pas bon ")
+					fmt.Fprintf(w, "Le mot de passe n'est pas bon ")
 				}
 			} else if passwordRegister != "" && usernameRegister != "" && emailRegister != "" { // l'utilisateur essaye de s'enregistrer
 				if passwordGood(passwordRegister, w) {
