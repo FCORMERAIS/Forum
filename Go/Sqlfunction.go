@@ -120,7 +120,6 @@ func GetPostDB(filter string) []Post {
 			prepare, _ := db.Prepare("SELECT ID_Post, ID_User_Post, ID_Catégorie_Post, Text_Post, Like, Dislike FROM Post WHERE ID_Catégorie_Post = ?")
 			resultPost, err = prepare.Query(ID_Categorie_Filtre)
 		}
-
 	}
 
 	if err != nil {
