@@ -288,21 +288,28 @@ body{
     padding: 1em 1em 1em 1em;
 }
 
+.Post_top{
+    position: relative;
+    height: 6em;
+}
+
+
 .Interface_User {
     display: flex;
+    justify-content: left;
     text-align: center;
 }
 
 .Inteface_Delete {
-    display: flex;
-    text-align: center;
-    justify-content: right;
-    margin-top: -8em;
-    margin-right: 1em;
+    position: absolute;
+    right: 1em;
+    top: 0;
 }
 
 .corbeille{
     position: relative;
+    background-color: transparent;
+    border: none;
     font-size: xxX-large;
 }
 

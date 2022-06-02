@@ -70,12 +70,14 @@ fetch("http://127.0.0.1:5555/Post")
             const posts = document.getElementById("InterfacePost")
             posts.innerHTML += `
             <div class="Post" id="${element.IdPost}">
-                <div class="Interface_User">
-                    <img src="https://pic.onlinewebfonts.com/svg/img_329115.png" class="profile_Post" width="35" height="35">
-                    <p class="UserName">${element.Username}</p>
-                </div>
-                <div id="Delete_${element.IdPost}" >
+                <div class="Post_top">
+                    <div class="Interface_User">
+                        <img src="https://pic.onlinewebfonts.com/svg/img_329115.png" class="profile_Post" width="35" height="35">
+                        <p class="UserName">${element.Username}</p>
+                    </div>
+                    <div id="Delete_${element.IdPost}" >
 
+                    </div>
                 </div>
                 <p class="Message">${element.TextPost}</p>
                 <div class=likeDislike style="display:flex">
@@ -123,7 +125,9 @@ fetch("http://127.0.0.1:5555/Post")
         if (element.SamePersonWhithSession) {
             document.getElementById(`Delete_${element.IdPost}`).classList.add("Inteface_Delete")
             document.getElementById(`Delete_${element.IdPost}`).innerHTML = `
-                <p class="corbeille">&#128465;</p>
+            <form method="POST">
+                <button class="corbeille" name="delete" value="${element.IdPost}" type="submit">&#128465;</button>
+            </form>
             `
         }
         });
