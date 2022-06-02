@@ -18,11 +18,11 @@ var UserLikePost []Post
 func main() {
 	fileserver := http.FileServer(http.Dir("static"))
 	http.Handle("/static", http.StripPrefix("/static", fileserver))
-	http.HandleFunc("/", testPath)
-	http.HandleFunc("/Acceuil", Acceuil)
-	http.HandleFunc("/Forum", Forum)
-	http.HandleFunc("/Post", GetJson)
-	http.HandleFunc("/JsonCategories", GetCategories)
+	http.HandleFunc("/", testPath)                    //si on tombe sur une URL non attribué on tests le chemin d'accées (pour verifier si il s'agit de js ou de css) sinon on affiche un message d'erreur
+	http.HandleFunc("/Acceuil", Acceuil)              // l'url /Acceuil renvoie vers la page de connection (il s'agit de la page sur lequel l'utilisateur est censé arriver en premier)
+	http.HandleFunc("/Forum", Forum)                  //cette url ramène versle forum ou il y a les posts
+	http.HandleFunc("/Post", GetPost)                 // GetJson permet de stocker les posts utile dans un ficher JSON en fonction des demandes de l'utilisateur
+	http.HandleFunc("/JsonCategories", GetCategories) //GetCategories fonctionne comme Json mais on y stock des Categories
 	fmt.Println("Serving @ : ", "http://"+Port+"/Acceuil")
 	log.Fatal(http.ListenAndServe(Port, nil))
 }
@@ -32,7 +32,8 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(GetAllCategories())
 }
 
-func GetJson(w http.ResponseWriter, r *http.Request) {
+//fonctoin permettant de recuperer tout les posts, il renvoie une liste de posts avec l'objet Post
+func GetPost(w http.ResponseWriter, r *http.Request) {
 	var data User
 	cookie, err := r.Cookie("UserSessionId")
 	if err != nil {
@@ -51,6 +52,7 @@ func GetJson(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//ici on test les URL pour voir si elle peuvent etre utile si elle ne le sont pas on affiche une erreur 404
 func testPath(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/js/Forum.js" || r.URL.Path == "/js/index.js" || r.URL.Path == "/static/style_main-page.css" || r.URL.Path == "/static/style.css" || r.URL.Path == "/images/Background.png" {
 		http.ServeFile(w, r, ".."+r.URL.Path)
@@ -59,6 +61,7 @@ func testPath(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//Acceuil est la page d'acceuil de notre site cest ici que l'utilisateur pourra se creer un compte ou bien se connecter ou se deconnecter
 func Acceuil(w http.ResponseWriter, r *http.Request) {
 	filter = ""
 	path := r.URL.Path
@@ -132,6 +135,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//fonction forum l'utilisateur pourra liker des posts en poster ou bien simplement les regarder si il n'est pas connecter
 func Forum(w http.ResponseWriter, r *http.Request) {
 	var ERROR bool = false
 	var Categories = GetAllCategories()
@@ -155,9 +159,9 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 		data.Username = "Invité"
 	}
 	if r.Method == "POST" {
-		if r.FormValue("Message_Value") != "" && data.Username != "Invité" {
+		if r.FormValue("Message_Value") != "" && data.Username != "Invité" { // ici l'utilisateur essaye de poster un message
 			SendPostinDB(r.FormValue("Message_Value"), data.Id, GetIdCategorie(r.FormValue("Categorie")))
-		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" {
+		} else if r.FormValue("Dislike") != "" && data.Username != "Invité" { // l'utilsateur essaye de mettre un dislike
 			if !Like(GetPostDisike(r.FormValue("Dislike")), data.Id) {
 				deleteUserLikePost(data.Id, r.FormValue("Dislike"))
 				addUserDislikePost(data.Id, r.FormValue("Dislike"))
@@ -175,8 +179,8 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			}
 		} else if r.FormValue("idPost") != "" && data.Username != "Invité" && r.FormValue("textCommentary") != "" { // l'utilisateur post un commentaire
 			addCommentary(r.FormValue("idPost"), r.FormValue("textCommentary"), data.Id)
-		} else if data.Username != "Invité" && r.FormValue("LikeComm") != "" { // l'utilisateur like un commentaire qu'il n'a pas encore liker
-			if !Like(GetCommentLike(r.FormValue("LikeComm")), data.Id) {
+		} else if data.Username != "Invité" && r.FormValue("LikeComm") != "" { // on test si l'utilisateur essaye de liker un messge et si il est connecté
+			if !Like(GetCommentLike(r.FormValue("LikeComm")), data.Id) { // l'utilisateur like un commentaire qu'il n'a pas encore liker
 				deleteUserDislikeComment(data.Id, r.FormValue("LikeComm"))
 				addUserLikeComment(data.Id, r.FormValue("LikeComm"))
 			} else { // l'utilisateur like un commentaire qu'il a déjà liker
@@ -191,17 +195,23 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 				deleteUserDislikeComment(data.Id, r.FormValue("DislikeComm"))
 				deleteUserLikeComment(data.Id, r.FormValue("DislikeComm"))
 			}
-		} else if r.FormValue("SeeAllPost") != "" {
+		} else if r.FormValue("SeeAllPost") != "" { // si l'utilisateur appuie sur le boutton voir tout les posts on renitialise tous les Filtres
 			UserPost = nil
 			UserLikePost = nil
 			filter = ""
-		} else if r.FormValue("categorieForm") != "" {
+		} else if r.FormValue("categorieForm") != "" { // on change la valeur de de filter pour qu'il soit associé a la
+			UserPost = nil
+			UserLikePost = nil
 			filter = r.FormValue("categorieForm")
-		} else if r.FormValue("SeeOurPost") != "" {
+		} else if r.FormValue("SeeOurPost") != "" { // ici l'utilisateur veut voir ses posts donc on va les cherchers avec GetUserPost
+			UserLikePost = nil
+			filter = ""
 			UserPost = GetUserPost(r.FormValue("SeeOurPost"))
-		} else if r.FormValue("SeePostLike") != "" {
+		} else if r.FormValue("SeePostLike") != "" { //  ici l'utilisateur veut voir ses posts liker donc on va les cherchers avec GetUserPostLike
+			UserPost = nil
+			filter = ""
 			UserLikePost = GetUserPostLike(r.FormValue("SeePostLike"))
-		} else if r.FormValue("delete") != "" {
+		} else if r.FormValue("delete") != "" { // ici l'utilisaeur souhaite supprimer un de ses posts
 			DeletePost(r.FormValue("delete"))
 		} else { // sinon il y a une erreur et lance l'erreur 500
 			error500(w, r)
@@ -224,6 +234,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//fonction permettant d'afficher a l'utilisateur qu'il s'est tromper d'URL et que c'est une erreur 404
 func error404(w http.ResponseWriter, r *http.Request) { // fonction qui affiche la page de l'erreur 404
 	tmpl, err := template.ParseFiles("../templates/error404.html") // utilisation du fichier error pour le template
 	if err != nil {
@@ -232,6 +243,7 @@ func error404(w http.ResponseWriter, r *http.Request) { // fonction qui affiche 
 	tmpl.Execute(w, nil) // exécute le template sur la page html
 }
 
+//fonction qui permet d'afficher les erreur 500 pour que l'utilisateur comprenne qu'il y a une erreur interne
 func error500(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("../templates/error500.html") // utilisation du fichier error pour le template
 	if err != nil {

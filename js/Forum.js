@@ -1,9 +1,9 @@
-document.getElementsByClassName('triangle')[0].addEventListener('click', async function () {
-    if (document.cookie !="") {
+document.getElementsByClassName('triangle')[0].addEventListener('click', async function () { // on ajoute un eventListener "click" au triangle 
+    if (document.cookie !="") { // on vérifie si il a des cookies sur le serveur pour savoir si la pop-up peut-etre activé
         const popup = document.createElement("div")
         popup.setAttribute("id","interface_CP");
         popup.classList.add("interface_create_post")
-        popup.innerHTML = 
+        popup.innerHTML = // on ajoute a la pop-up son corps
         `
         <p class="CP_Information">Balance ton post :</p>
             <input class="CP_Message" name="SendPost" id="Message" type="text" placeholder="C'est ici ton blabla ;)">
@@ -12,15 +12,14 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', async f
         <p class="ajout_photo">&#128193;</p>
         `
         let options =""
-        await fetch("http://127.0.0.1:5555/JsonCategories")
+        await fetch("http://127.0.0.1:5555/JsonCategories") // on vas chercher les informations des Catégories pour qu'il puisse afficher les choix de categories possible
             .then(response => response.json())
             .then( function (categories) {
                 categories.forEach(categorie => {
-                    console.log(categorie)
                     options +=`
-                    <option value="${categorie.Name}">${categorie.Name}</option>
+                    <option value="${categorie.Name}">${categorie.Name}</option> 
                     `
-                }) 
+                })
             })
         const popupNext = document.createElement("div")
         popupNext.setAttribute("id","interface_CP_next");
@@ -37,36 +36,36 @@ document.getElementsByClassName('triangle')[0].addEventListener('click', async f
             <input class="CP_Send" type="submit" value="&#10145" id="publishPost">
         </form>
         `
-        document.body.appendChild(popupNext)
-        document.body.appendChild(popup)
-    }else {
+        document.body.appendChild(popupNext) // on ajoute la pop-up pour choisir la categories
+        document.body.appendChild(popup) // on ajoute la pop-up a notre html
+    }else { // si il n'y a pas de cookie dans le serveur alors on envois une alerte a l'utilisateur indiquant qu'il doit se connecter
         alert("Veuillez vous connectez pour pouvoir poster ")
     }
-    document.getElementById('CP_close').addEventListener('click', () => {
+    document.getElementById('CP_close').addEventListener('click', () => { // on ajoute un eventListener a la pop-up pour la fermer
             document.getElementById("interface_CP").remove();
             document.getElementById("interface_CP_next").remove()
     })
-    document.getElementById('CP_close_next').addEventListener('click', () => {
+    document.getElementById('CP_close_next').addEventListener('click', () => { // on ajoute un event listener a la deuxieme pop-up de categories pour aussi la fermer
         document.getElementById("interface_CP_next").remove();
         document.getElementById("interface_CP").remove();
 })
-    document.getElementById('nextPost').addEventListener('click', () => {
+    document.getElementById('nextPost').addEventListener('click', () => { // on ajoute un eventListener au post pour quand il l'ajoute
         let Message = document.getElementById("Message").value
         document.getElementById("MessageValue").value = Message
         document.getElementById("Value_Message").innerHTML = Message
         document.getElementsByClassName("interface_create_post_Next")[0].style.zIndex = "7";
     });
-    document.getElementById('form_next').addEventListener('submit', () => {
+    document.getElementById('form_next').addEventListener('submit', () => { // on envoie les données pour qu'il envois une requete de post
         console.log(document.getElementById("MessageValue").value)
     });
 });
 
 
-fetch("http://127.0.0.1:5555/Post")
+fetch("http://127.0.0.1:5555/Post") // on avs chercher tout les posts a afficher
 .then(response => response.json())
 .then(function (donnee) {
-    if (donnee != null) {
-        donnee.forEach(element => {
+    if (donnee != null) { // si donnee est null on afficher rien du tout 
+        donnee.forEach(element => {//sinon on creer un Post pour chaque Post qu'il y a dans donnée
             const posts = document.getElementById("InterfacePost")
             posts.innerHTML += `
             <div class="Post" id="${element.IdPost}">
@@ -98,8 +97,8 @@ fetch("http://127.0.0.1:5555/Post")
                 </div>
             </div>
             `
-        if (element.CommentaryPost != null) {
-            element.CommentaryPost.forEach(commentary => {
+        if (element.CommentaryPost != null) { // on vérifie si il y a des commentaire dans les posts
+            element.CommentaryPost.forEach(commentary => { // si il y en a on les ajoute tous un par un 
                 const comm = document.getElementById(commentary.IdPost)
                 const comment = document.createElement("div")
                 comment.innerHTML =`
@@ -117,12 +116,12 @@ fetch("http://127.0.0.1:5555/Post")
                     </div>
                 </div>
                 `
-                comm.appendChild(comment)
+                comm.appendChild(comment) // on ajoute le commentaire a la liste de commentaire
             });
         }
         document.body.appendChild(posts)
         document.getElementById(element.IdPost).style.backgroundColor = element.CategorieColor;
-        if (element.SamePersonWhithSession) {
+        if (element.SamePersonWhithSession) { // on verifie si l'utilisateur est l'auteur des posts et si cest le cas il peut supprimer les posts
             document.getElementById(`Delete_${element.IdPost}`).classList.add("Inteface_Delete")
             document.getElementById(`Delete_${element.IdPost}`).innerHTML = `
             <form method="POST">
@@ -134,7 +133,7 @@ fetch("http://127.0.0.1:5555/Post")
     }
 })
 
-fetch("http://127.0.0.1:5555/JsonCategories")
+fetch("http://127.0.0.1:5555/JsonCategories") // Permet de recuperer toutes les categories disponibles pour les afficher en bas a droite en forme de bouton avec eur couleur respective
 .then(response => response.json())
 .then( function (categories) {
     categories.forEach(categorie => {

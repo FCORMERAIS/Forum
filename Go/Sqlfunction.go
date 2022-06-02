@@ -79,6 +79,7 @@ func GetUsernameByID(UUID string) string {
 	return Username
 }
 
+//fonction permettant d'avoir la couleur associé a la categorie en utilisant l'id d'un post (renvoie la couleur associé)
 func GetColorCategoryById(UUID string) string {
 	db, err1 := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err1 != nil {
@@ -100,6 +101,7 @@ func GetColorCategoryById(UUID string) string {
 	return color
 }
 
+//fonction permettant de renvoyer le nom d'une categorie en utilisant l'id de la categorie
 func GetNameCategoryById(UUID string) string {
 	db, err1 := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err1 != nil {
@@ -121,6 +123,7 @@ func GetNameCategoryById(UUID string) string {
 	return NameCategory
 }
 
+//Fonction permettant de rajouter un post a la base de donnée
 func SendPostinDB(message string, Id_User string, categorie string) {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -138,6 +141,7 @@ func SendPostinDB(message string, Id_User string, categorie string) {
 	db.Close()
 }
 
+//fonction permettant de recuperer la table Posts, on peut recuperer tout les posts en fonction d'un filtre ou non
 func GetPostDB(filter string, UserId string) []Post {
 	var postList []Post
 	var resultPost *sql.Rows
@@ -586,6 +590,7 @@ func GetCommmentary(idPost string) []Commentary {
 	return ListCommentary
 }
 
+//fonction permettant de recuperer l'ID d'une categorie en envoyant le nom de la categorie voulut
 func GetIdCategorie(categorieName string) string {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -607,6 +612,7 @@ func GetIdCategorie(categorieName string) string {
 	return IdCategorie
 }
 
+//fonction permettant de recuperer tous mes posts d'un utilisateur en utilisant son ID
 func GetUserPost(userID string) []Post {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -640,6 +646,7 @@ func GetUserPost(userID string) []Post {
 	return ListPost
 }
 
+//fonction permettant de recuperer tous les posts liker d'un utilsateur en utilisant son ID
 func GetUserPostLike(userID string) []Post {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
@@ -675,6 +682,7 @@ func GetUserPostLike(userID string) []Post {
 	return ListPost
 }
 
+//fonction permettant de supprimer un post d'une base de données
 func DeletePost(ID_Post string) {
 	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
 	if err != nil {
