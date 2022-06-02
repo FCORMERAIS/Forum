@@ -45,6 +45,38 @@ body{
     font-size: large;
 }
 
+.interfaceAddCategorie{
+    position: relative;
+    top: 10%;
+    padding: 0.5em;
+    height: 5%;
+    background-color: #606060;
+}
+
+.nameAddCategorie {
+    border: none;
+    width: 100%;
+    text-align: center;
+}
+
+.colorAddCategorie{
+    background-color: transparent;
+    border: none;
+    left: 1em;
+    position: absolute;
+    width: 50%;
+    bottom: 0;
+}
+
+.SumbitAddCategorie{
+    background-color: transparent;
+    border: none;
+    font-size: xxx-large;
+    position: absolute;
+    right: 0.3em;
+    bottom: -0.3em;
+}
+
 .privateMsg {
     position: relative;
     top: 7%;
@@ -78,17 +110,14 @@ body{
     top: 10%;
 }
 
-.search_categorie {
-    position: relative;
-    top: 10%;
-}
-
 .interface_categories {
-    position: relative;
-    top: 12%;
+    position: fixed;
+    bottom: 2%;
     overflow-y: scroll;
     scrollbar-width: auto;
-    height: 30%;
+    height: 25%;
+    width: 17%;
+    z-index: 8;
 }
 
 .button_categories {

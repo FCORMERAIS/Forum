@@ -213,6 +213,10 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			UserLikePost = GetUserPostLike(r.FormValue("SeePostLike"))
 		} else if r.FormValue("delete") != "" { // ici l'utilisaeur souhaite supprimer un de ses posts
 			DeletePost(r.FormValue("delete"))
+		} else if r.FormValue("nameCategorieAdd") != "" && r.FormValue("colorAddCategorie") != "" {
+			fmt.Println(r.FormValue("nameCategorieAdd"))
+			fmt.Println(r.FormValue("colorAddCategorie"))
+			AddCategorie(r.FormValue("nameCategorieAdd"), r.FormValue("colorAddCategorie"))
 		} else { // sinon il y a une erreur et lance l'erreur 500
 			error500(w, r)
 			ERROR = true

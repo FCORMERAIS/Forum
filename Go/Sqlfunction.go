@@ -700,3 +700,20 @@ func DeletePost(ID_Post string) {
 	}
 	db.Close()
 }
+
+func AddCategorie(Name string, color string) {
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println("Erreur ouverture du fichier :")
+		fmt.Println(err)
+	}
+	prepareAddCategorie, err := db.Prepare("INSERT INTO Categorie (Name, ID_Categorie, Color) VALUES (?,?,?)")
+	var eRR error
+	_, err2 := prepareAddCategorie.Exec(Name, uuid.Must(uuid.NewV4(), eRR), color)
+	if err != nil || err2 != nil {
+		fmt.Println("Erreur d'insertion :")
+		fmt.Println(err)
+		fmt.Println(err2)
+	}
+	db.Close()
+}

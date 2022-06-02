@@ -137,6 +137,13 @@ fetch("http://127.0.0.1:5555/JsonCategories") // Permet de recuperer toutes les 
 .then(response => response.json())
 .then( function (categories) {
     categories.forEach(categorie => {
+        const categorieAdd = document.getElementById("AffichageCategorie")
+        categorieAdd.innerHTML += `
+        <form method="post" class="button_categories">
+                <input name="categorieForm" class="categorie" type="submit" id="ButonCategorie${categorie.Name}" value=${categorie.Name} />
+        </form>
+        `
+        document.body.appendChild(categorieAdd)
         document.getElementById(`ButonCategorie${categorie.Name}`).style.backgroundColor = categorie.Color;
     });
 });
