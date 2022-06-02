@@ -15,16 +15,25 @@ var Port = "127.0.0.1:5555"
 func main() {
 	fileserver := http.FileServer(http.Dir("static"))
 	http.Handle("/static", http.StripPrefix("/static", fileserver))
-	http.HandleFunc("/", Acceuil)
+	http.HandleFunc("/", testPath)
+	http.HandleFunc("/Acceuil", Acceuil)
 	http.HandleFunc("/Forum", Forum)
 	http.HandleFunc("/Post", GetJson)
-	fmt.Println("Serving @ : ", "http://"+Port)
+	fmt.Println("Serving @ : ", "http://"+Port+"/Acceuil")
 	log.Fatal(http.ListenAndServe(Port, nil))
 }
 
 func GetJson(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(GetPostDB())
+}
+
+func testPath(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/js/Forum.js" || r.URL.Path == "/js/index.js" || r.URL.Path == "/static/style_main-page.css" || r.URL.Path == "/static/style.css" {
+		http.ServeFile(w, r, ".."+r.URL.Path)
+	} else {
+		error404(w, r)
+	}
 }
 
 func Acceuil(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +47,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 		data.Username = GetUsernameByID(cookie.Value)
 	}
 	fmt.Println(r.Method)
-	if path == "/" {
+	if path == "/Acceuil" {
 		if r.Method == "POST" { // Lorsque que l'on rentre dans le POST cc'est que l'utilisateur veut se connecter ou s'enregistrer
 			var usernameRegister = r.FormValue("username")
 			var passwordRegister = r.FormValue("password")
@@ -65,7 +74,7 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 					passwordHash, err := HashPassword(passwordRegister)
 					if err != nil {
 						fmt.Println(err)
-						error404(w, r)
+						error500(w, r)
 					}
 					data = SignUp(emailRegister, usernameRegister, passwordHash)
 					cookie := &http.Cookie{
@@ -81,25 +90,23 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 			} else if usernameRegister == "" || passwordConnect == "" || emailRegister == "" || passwordRegister == "" || EmailConnect == "" { // l'utilisateur essaye de se déconnecté
 				data.Username = "Invité"
 			} else { // sinon il y a un roblème on affiche la page ERROR 404
-				error404(w, r)
+				error500(w, r)
 			}
 		}
 	} else {
 		path = ".." + path
 	}
-	if r.URL.Path == "/" {
+	if r.URL.Path == "/Acceuil" {
 		t, err := template.ParseFiles("../templates/server.html", "../templates/header.html") // on parse les fichier html que l'on a besoin pour afficher la page voulut
 		if err != nil {
 			fmt.Println(err)
-			error404(w, r) // si il y a un problème on lance la fonctio nerror 404
+			error500(w, r) // si il y a un problème on lance la fonctio nerror 404
 		}
 		err2 := t.Execute(w, data)
 		if err2 != nil {
 			fmt.Println(err2)
-			error404(w, r)
+			error500(w, r)
 		}
-	} else {
-		http.ServeFile(w, r, path)
 	}
 }
 
@@ -162,7 +169,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 				deleteUserLikeComment(data.Id, r.FormValue("DislikeComm"))
 			}
 		} else { // sinon il y a une erreur et lance l'erreur 404
-			error404(w, r)
+			error500(w, r)
 		}
 	}
 	t, err := template.ParseFiles("../templates/Forum.html") // on charge la templates du Forum
@@ -174,7 +181,7 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 	err2 := t.Execute(w, Page) // on l'éxecute
 	if err2 != nil {
 		fmt.Println(err2)
-		error404(w, r)
+		error500(w, r)
 	}
 }
 
@@ -183,5 +190,14 @@ func error404(w http.ResponseWriter, r *http.Request) { // fonction qui affiche 
 	if err != nil {
 		fmt.Println(err)
 	}
-	tmpl.ExecuteTemplate(w, "error404", nil) // exécute le template sur la page html
+	tmpl.Execute(w, nil) // exécute le template sur la page html
+}
+
+func error500(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("../templates/error500.html") // utilisation du fichier error pour le template
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Fprintf(w, "hello")
+	tmpl.Execute(w, nil) // exécute le template sur la page html
 }
