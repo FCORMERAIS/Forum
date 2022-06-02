@@ -127,26 +127,15 @@ func GetPostDB(filter string) []Post {
 		fmt.Println("Erreur de recherche :")
 		fmt.Println(err)
 	}
-	var Username string
-	var Text_Post string
-	var id_post string
-	var Like string
-	var Dislike string
-	var numberLike int
-	var numberDislike int
-	var IdUser string
-	var ID_Categorie string
-	var CategorieColor string
-	var CategorieName string
+	var Like, ID_Categorie, Dislike string
 	var singlePost Post
 	for resultPost.Next() {
 		Like = ""
 		Dislike = ""
-		resultPost.Scan(&id_post, &IdUser, &ID_Categorie, &Text_Post, &Like, &Dislike)
-		fmt.Println(Like, id_post)
-		Username = GetUsernameByID(IdUser)
-		numberLike = KnowLike(Like)
-		numberDislike = KnowLike(Dislike)
+		resultPost.Scan(&singlePost.IdPost, &singlePost.Username, &ID_Categorie, &singlePost.TextPost, &Like, &Dislike)
+		singlePost.Username = GetUsernameByID(singlePost.Username)
+		singlePost.LikePost = KnowLike(Like)
+		singlePost.DislikePost = KnowLike(Dislike)
 		resultCategorie, err := db.Prepare("SELECT Name, Color FROM Categorie WHERE ID_Categorie = ?")
 		result, err := resultCategorie.Query(ID_Categorie)
 		if err != nil {
@@ -154,17 +143,9 @@ func GetPostDB(filter string) []Post {
 			fmt.Println(err)
 		}
 		for result.Next() {
-			result.Scan(&CategorieName, &CategorieColor)
+			result.Scan(&singlePost.CategorieName, &singlePost.CategorieColor)
 		}
-		singlePost = Post{
-			Username:       Username,
-			TextPost:       Text_Post,
-			LikePost:       numberLike,
-			DislikePost:    numberDislike,
-			IdPost:         id_post,
-			CategorieColor: CategorieColor,
-			CategorieName:  CategorieName,
-		}
+		singlePost.CommentaryPost = GetCommmentary(singlePost.IdPost)
 		postList = append(postList, singlePost)
 	}
 	db.Close()
