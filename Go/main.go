@@ -93,8 +93,6 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 				error500(w, r)
 			}
 		}
-	} else {
-		path = ".." + path
 	}
 	if r.URL.Path == "/Acceuil" {
 		t, err := template.ParseFiles("../templates/server.html", "../templates/header.html") // on parse les fichier html que l'on a besoin pour afficher la page voulut
