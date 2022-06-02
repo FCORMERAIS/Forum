@@ -184,6 +184,8 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 			}
 		} else if r.FormValue("categorieForm") != "" {
 			filter = r.FormValue("categorieForm")
+		} else if r.FormValue("delete") != "" {
+			DeletePost(r.FormValue("delete"))
 		} else { // sinon il y a une erreur et lance l'erreur 404
 			error500(w, r)
 		}

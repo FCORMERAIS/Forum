@@ -574,3 +574,21 @@ func GetIdCategorie(categorieName string) string {
 	return IdCategorie
 
 }
+
+func DeletePost(ID_Post string) {
+	db, err := sql.Open("sqlite3", "../BD/Forum_DB.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	prepareDeletePost, err2 := db.Prepare("DELETE FROM Post WHERE ID_Post = ?")
+	if err2 != nil {
+		fmt.Println("Erreur ouverture du fichier : ", err2)
+	}
+	result, err3 := prepareDeletePost.Exec(ID_Post)
+	if err3 != nil {
+		fmt.Println("Erreur ouverture du fichier : ", err3)
+	} else {
+		fmt.Println(result)
+	}
+	db.Close()
+}
