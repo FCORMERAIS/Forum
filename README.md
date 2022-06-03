@@ -12,6 +12,8 @@ Pour commencer, copiez les fichiers du projet sur votre interface, assurez-vous 
 
 Assurez-vous d'avoir votre version de golang 1.7.10 ou +.
 
+Lorsque vous créez un compte assurez-vous d'avoir un mot de passe avec (1 majuscule, 1 minuscule, 1 chiffre, 10 caractères, 1 caractère spécial)
+
 ## Auteur
 
 - CORMERAIS Flavio
