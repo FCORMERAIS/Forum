@@ -92,9 +92,9 @@ func Acceuil(w http.ResponseWriter, r *http.Request) {
 						cookie.Value = data.Id
 						cookie.MaxAge = 3600 * 24
 						http.SetCookie(w, cookie)
+					} else {
+						fmt.Fprintf(w, "Le mot de passe n'est pas bon ")
 					}
-				} else {
-					fmt.Fprintf(w, "Le mot de passe n'est pas bon ")
 				}
 			} else if passwordRegister != "" && usernameRegister != "" && emailRegister != "" { // l'utilisateur essaye de s'enregistrer
 				if passwordGood(passwordRegister, w) {
